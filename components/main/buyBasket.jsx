@@ -20,6 +20,7 @@ const BuyBasket = () => {
   // چک کردن وضعیت لاگین از localStorage
   const checkLoginStatus = () => {
     const user = localStorage.getItem("user");
+    console.log("Login status check: ", user);  // بررسی وضعیت
     setIsLoggedIn(!!user); // اگر کاربر وجود داشته باشد، لاگین است
   };
 
@@ -42,39 +43,48 @@ const BuyBasket = () => {
   // تایید خرید
   const handleConfirm = () => {
     if (isLoggedIn) {
-      // دریافت اطلاعات فرم از localStorage
-      const userFormData = JSON.parse(localStorage.getItem('userFormData'));
+        // دریافت اطلاعات فرم از localStorage
+        const userFormData = JSON.parse(localStorage.getItem('userFormData'));
 
-      // ساخت پیام شامل اطلاعات فرم و اقلام خرید
-      const userMessage = `
-          اطلاعات مشتری:
-          نام: ${userFormData.name}
-          شماره تلفن: ${userFormData.phone}
-          آدرس: ${userFormData.address}
-          شهر: ${userFormData.city}
+        // ساخت پیام شامل اطلاعات فرم و اقلام خرید
+        const userMessage = `
+            اطلاعات مشتری:
+            نام: ${userFormData.name}
+            شماره تلفن: ${userFormData.phone}
+            آدرس: ${userFormData.address}
+            شهر: ${userFormData.city}
 
-          اقلام خرید:
-          ${cart.map((item, index) => `${index + 1}. ${item.name} - ${item.quantity} عدد`).join('\n')}
+            اقلام خرید:
+            ${cart.map((item, index) => `${index + 1}. ${item.name} - ${item.quantity} عدد`).join('\n')}
 
-          مجموع خرید: ${totalAmount.toLocaleString()} تومان
-      `;
+            مجموع خرید: ${totalAmount.toLocaleString()} تومان
+        `;
 
-      // URL encode کردن پیام
-      const encodedMessage = encodeURIComponent(userMessage);
+        // URL encode کردن پیام
+        const encodedMessage = encodeURIComponent(userMessage);
 
-      // شماره واتساپ مقصد
-      const whatsappNumber = '989388780198'; // شماره واتساپ شما بدون صفر اول
+        // شماره واتساپ مقصد
+        const whatsappNumber = '989388780198'; // شماره واتساپ شما بدون صفر اول
 
-      // لینک ارسال به واتساپ
-      const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
+        // لینک ارسال به واتساپ
+        const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
 
-      // ارسال پیام به واتساپ و باز کردن لینک
-      window.open(whatsappLink, '_blank');  // باز کردن لینک در تب جدید
+        // تست کردن اینکه لینک به درستی ساخته شده است
+        console.log(whatsappLink);
+
+        // باز کردن لینک واتساپ در پنجره جدید
+        window.open(whatsappLink, '_blank'); // این خط برای باز کردن لینک در پنجره جدید است
+
+        // بعد از ارسال پیام به واتساپ، هدایت به صفحه دلخواه (مثلاً صفحه اصلی)
+        setTimeout(() => {
+            router.push("/");  // به صفحه اصلی هدایت می‌شود (در صورت نیاز تغییر دهید)
+        }, 2000); // 2 ثانیه تاخیر برای ارسال پیام
+    } else {
+        console.log("کاربر وارد سیستم نشده است.");
     }
 
     setShowModal(false); // بستن مدال
-    router.push("/checkout"); // هدایت به صفحه تکمیل خرید (در صورت نیاز)
-  };
+};
 
   const handleIncrease = (productName) => {
     const product = cart.find(item => item.name === productName);

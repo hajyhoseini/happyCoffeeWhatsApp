@@ -19,6 +19,8 @@ const Page = () => {
         e.preventDefault();
         // Save form data to localStorage
         localStorage.setItem('userFormData', JSON.stringify(formData));
+        localStorage.setItem('user', JSON.stringify(formData)); // ذخیره کردن اطلاعات کاربر برای لاگین
+
         setShowAlert(true);
 
         setTimeout(() => {
@@ -52,21 +54,21 @@ const Page = () => {
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="نام خود را وارد کنید"
+                            className={`w-full p-2 border rounded-lg ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} border-gray-300`}
+                            required
                         />
                     </div>
 
                     <div className="mb-4">
                         <label htmlFor="phone" className={`block font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>شماره تلفن</label>
                         <input
-                            type="text"
+                            type="tel"
                             id="phone"
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="شماره تلفن خود را وارد کنید"
+                            className={`w-full p-2 border rounded-lg ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} border-gray-300`}
+                            required
                         />
                     </div>
 
@@ -78,12 +80,12 @@ const Page = () => {
                             name="address"
                             value={formData.address}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="آدرس خود را وارد کنید"
+                            className={`w-full p-2 border rounded-lg ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} border-gray-300`}
+                            required
                         />
                     </div>
 
-                    <div className="mb-6">
+                    <div className="mb-4">
                         <label htmlFor="city" className={`block font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>شهر</label>
                         <input
                             type="text"
@@ -91,30 +93,30 @@ const Page = () => {
                             name="city"
                             value={formData.city}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="شهر خود را وارد کنید"
+                            className={`w-full p-2 border rounded-lg ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} border-gray-300`}
+                            required
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        ارسال اطلاعات
-                    </button>
+                    <div className="flex justify-center mb-4">
+                        <button
+                            type="submit"
+                            className={`w-full p-2 rounded-lg text-white ${isDarkMode ? 'bg-yellow-500' : 'bg-yellow-700'} hover:bg-yellow-600 transition duration-300`}
+                        >
+                            ثبت اطلاعات
+                        </button>
+                    </div>
                 </form>
+
+                {showAlert && (
+                    <div className={`p-4 mb-4 text-center rounded-lg ${isDarkMode ? 'bg-green-600 text-white' : 'bg-green-500 text-black'}`}>
+                        <FaCheck className="inline-block mr-2" />
+                        اطلاعات شما با موفقیت ثبت شد!
+                    </div>
+                )}
             </div>
-
-            {/* alert */}
-            {showAlert && (
-                <div className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 p-5 rounded-lg flex items-center gap-3 transition-all duration-500 ease-out scale-105 shadow-2xl opacity-100 ${isDarkMode ? 'bg-yellow-700/90 text-white' : 'bg-yellow-500/80 text-white'}`}>
-                    <FaCheck className={`text-green-500 `} size={20} />
-                    <span className="font-semibold">اطلاعات با موفقیت ثبت شد!</span>
-                </div>
-            )}
-
         </div>
     );
-}
+};
 
 export default Page;
