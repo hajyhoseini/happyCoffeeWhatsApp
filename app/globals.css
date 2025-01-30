@@ -1,0 +1,366 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* فایل styles.css */
+
+.text-center-padding {
+  @apply text-center p-8 rounded-lg shadow-lg transition-all duration-500;
+}
+
+.theme-header {
+  @apply text-2xl md:text-3xl rounded-lg p-2 mt-4 font-extrabold;
+}
+
+.theme-text {
+  @apply mb-8 rounded-md p-3 inline-block;
+}
+
+.flavor-title {
+  @apply mb-5  text-3xl inline-block rounded-lg p-3;
+}
+
+.icon-container {
+  @apply text-6xl mb-4 transition-transform transform hover:scale-110;
+}
+
+.flavor-name {
+  @apply font-semibold text-xl;
+}
+
+.contact-btn {
+  @apply text-3xl hover:transition-all duration-300;
+}
+
+.contact-icon {
+  @apply text-3xl hover:transition-all duration-300;
+}
+
+
+:root {
+  --primary-gradient: linear-gradient(to right, rgba(42, 163, 153, 1), rgba(51, 184, 134, 1), rgba(37, 99, 235, 1));
+  --hover-color: rgba(255, 255, 255, 0.7);
+}
+@keyframes spinMove {
+  0% {
+    transform: rotate(0deg); /* شروع از 0 درجه */
+  }
+  25% {
+    transform: rotate(90deg); /* حرکت به راست و چرخش 90 درجه */
+  }
+  50% {
+    transform: rotate(180deg); /* برگشت به مرکز و چرخش 180 درجه */
+  }
+  75% {
+    transform: rotate(270deg); /* حرکت به چپ و چرخش 270 درجه */
+  }
+  100% {
+    transform: rotate(360deg); /* برگشت به مرکز و چرخش 360 درجه */
+  }
+}
+
+@keyframes moveHorizontal {
+  0% {
+    transform: translateX(0) rotate(0deg); /* شروع از وسط با چرخش 0 درجه */
+  }
+  25% {
+    transform: translateX(33.33%) rotate(0deg); /* حرکت به راست به اندازه یک سوم عرض */
+  }
+  50% {
+    transform: translateX(0) rotate(-90deg); /* برگشت به مرکز با چرخش معکوس */
+  }
+  75% {
+    transform: translateX(-33.33%) rotate(-180deg); /* حرکت به چپ به اندازه یک سوم عرض با چرخش معکوس */
+  }
+  100% {
+    transform: translateX(0) rotate(-360deg); /* برگشت به مرکز با چرخش معکوس */
+  }
+}
+
+.animate-spinMove {
+  animation: spinMove 6s infinite ease-in-out, moveHorizontal 6s infinite ease-in-out;
+  transform-origin: center; /* چرخش حول محور Z */
+}
+
+
+h1 {
+  font-size: 2.5rem;
+}
+
+
+p {
+  font-size: 1.25rem;
+}
+
+header {
+  animation: gradientAnimation 10s ease infinite;
+}
+.nav-item:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease-in-out;
+}
+.my-hover-sidebar {
+  @apply hover:bg-white/80 hover:backdrop-blur-lg hover:rounded-lg ps-3;
+}
+.my-hover-sidebar-text {
+  @apply hover:bg-white/80 hover:backdrop-blur-lg hover:rounded-lg ps-3;
+}
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
+  color: black;
+}
+body {
+  padding-top: 190px; /* به اندازه ارتفاع هدر تنظیم کنید */
+}
+
+body.dark {
+  background-color: black;
+  color: white;
+}
+
+
+
+/* در فایل globals.css یا هر فایل CSS دیگر */
+body.auth-page header, body.auth-page footer {
+  display: none;
+}
+
+body {
+  font-family: 'Vazir', sans-serif;
+}
+/* انیمیشن برای برق سفید */
+@keyframes lightning {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* اعمال انیمیشن بر روی خط برق */
+.animate-lightning {
+  background: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.6) 50%);
+  animation: lightning 1.5s linear infinite;
+}
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column; /* تغییر جهت لیست به عمودی در موبایل */
+  }
+  nav ul li {
+    width: 100%; /* دکمه‌ها عرض کامل را در موبایل خواهند گرفت */
+  }
+}
+@keyframes tilt {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-25deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.coffee-tilt {
+  animation: tilt 0.6s ease-in-out;
+}
+
+.sidebar-open {
+  animation: slideIn 0.5s ease-out forwards;
+}
+/* استایل عمومی برای انیمیشن */
+@keyframes smileAnimation {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* نیم دایره قرمز و انیمیشن لبخند */
+.animateWarmText {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: red;
+  border-radius: 50%;
+  padding: 10px 20px;
+  animation: smileAnimation 1s ease-out forwards;
+}
+
+/* استایل برای شکلک لبخند */
+.smiley {
+  margin-right: 8px;
+  font-size: 2.5rem; /* اندازه شکلک */
+  animation: smileAnimation 1s ease-out forwards;
+}
+
+/* فقط در حالت موبایل (مدیا کوئری برای صفحه‌های کوچکتر از 768px) */
+@media (max-width: 768px) {
+  .animateWarmText {
+    font-size: 1.5rem;
+    padding: 8px 15px;
+  }
+
+  .smiley {
+    font-size: 2rem; /* اندازه شکلک در موبایل */
+  }
+}
+/* استایل‌های دکمه تماس */
+.bg-brown-600 {
+  background-color: #6b4f3f; /* رنگ قهوه‌ای تیره */
+}
+
+/* استایل‌های آیتم‌های منو */
+.support-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  color: #6b4f3f; /* رنگ قهوه‌ای */
+  text-decoration: none;
+  font-size: 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.support-item:hover {
+  background-color: #f0e6d2; /* رنگ پس‌زمینه روشن و گرم */
+}
+
+/* آیکون‌های تماس */
+.support-item svg {
+  margin-right: 8px;
+  color: #6b4f3f; /* رنگ آیکون‌ها برای هماهنگی با دکمه */
+}
+
+/* حالت‌ها و استایل‌ها برای فونت‌ها */
+@media (max-width: 768px) {
+  .support-button {
+    padding: 12px;
+    font-size: 20px;
+  }
+
+  .support-menu {
+    width: 170px;
+  }
+}
+/* انیمیشن ضربان دار */
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2); /* بزرگ شدن در وسط انیمیشن */
+  }
+  100% {
+    transform: scale(1); /* بازگشت به اندازه اولیه */
+  }
+}
+
+.heart-pulse {
+  animation: heartbeat 1.5s infinite; /* انیمیشن ضربان دار با زمان 1.5 ثانیه */
+}
+.smiley-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.smiley {
+  font-size: 2.5rem; /* اندازه کوچکتر */
+  animation: smileyAnimation 1.5s infinite ease-in-out;
+}
+
+@keyframes smileyAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animateTyping {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid;
+  animation: typing 4s steps(40) 1s forwards, blinkCaret 0.75s step-end infinite;
+}
+
+@keyframes blinkCaret {
+  50% {
+    border-color: transparent;
+  }
+}
+@keyframes wave {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+.wave-effect {
+  animation: wave 1.5s ease-in-out infinite;
+}
