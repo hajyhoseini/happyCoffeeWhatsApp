@@ -22,16 +22,12 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (productName, price, quantity) => {
     setCart((prevCart) => {
-      // چک میکنیم که آیا محصول با همین نام قبلاً در سبد خرید موجود هست یا نه
       const existingProduct = prevCart.find(item => item.name === productName);
-
       if (existingProduct) {
-        // اگر محصول موجود بود، تعدادش رو افزایش میدیم
         return prevCart.map(item =>
           item.name === productName ? { ...item, quantity: item.quantity + quantity } : item
         );
       } else {
-        // در غیر این صورت محصول جدید به سبد خرید اضافه میشه
         return [...prevCart, { name: productName, price, quantity }];
       }
     });
@@ -45,11 +41,13 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     if (cart.length > 0) {
       localStorage.setItem("cart", JSON.stringify(cart));
+    } else {
+      localStorage.removeItem("cart"); // در صورتی که سبد خرید خالی است، آن را از localStorage حذف می‌کنیم
     }
   }, [cart]);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cart, setCart, addToCart, removeFromCart }}>
       {children}
     </CartContext.Provider>
   );
