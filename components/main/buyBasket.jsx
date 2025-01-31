@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { Container, Card, Button } from "react-bootstrap";
 import { FaCoffee } from "react-icons/fa";
-import CartItem from "../detailical/buyBasket/cartItem";
 import CartSummary from "../detailical/buyBasket/CartSummary";
 import EmptyCart from "../detailical/buyBasket/EmptyCart";
 import PurchaseModal from "../detailical/buyBasket/PurchaseModal";
+import CartItem from "../detailical/buyBasket/cartItem";
 
 
 const BuyBasket = () => {
@@ -45,9 +45,45 @@ const BuyBasket = () => {
 
   // تایید خرید
   const handleConfirm = () => {
-    // عمل تایید خرید و ارسال به واتساپ را انجام دهید
+    if (isLoggedIn) {
+      const userFormData = JSON.parse(localStorage.getItem('userFormData'));
+  
+      const userMessage = `
+        اطلاعات مشتری:
+        نام: ${userFormData.name}
+        شماره تلفن: ${userFormData.phone}
+        آدرس: ${userFormData.address}
+        شهر: ${userFormData.city}
+  
+        اقلام خرید:
+        ${cart.map((item, index) => `${index + 1}. ${item.name} - ${item.quantity} عدد`).join('\n')}
+  
+        مجموع خرید: ${totalAmount.toLocaleString()} تومان
+      `;
+  
+      const encodedMessage = encodeURIComponent(userMessage);
+      const whatsappNumber = '989388780198'; // شماره واتساپ شما
+      const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
+  
+      // باز کردن لینک در پنجره جدید
+      window.open(whatsappLink, '_blank');
+  
+      // حذف سبد خرید از localStorage و تنظیم مجدد سبد خرید
+      localStorage.removeItem("cart");
+      setCart([]);
+  
+      // ریدایرکت به صفحه اصلی بعد از 2 ثانیه
+      setTimeout(() => {
+        router.push("/");  // ریدایرکت به صفحه اصلی
+      }, 2000);  // 2 ثانیه تاخیر
+  
+    } else {
+      console.log("کاربر وارد سیستم نشده است.");
+    }
+  
     setShowModal(false); // بستن مدال
   };
+  
 
   // محاسبه مجموع قیمت سبد خرید
   const totalAmount = cart.reduce((total, item) => total + item.quantity * item.price, 0);
