@@ -49,22 +49,31 @@ const BuyBasket = () => {
       const userFormData = JSON.parse(localStorage.getItem('userFormData'));
   
       const userMessage = `
-        اطلاعات مشتری:
-        نام: ${userFormData.name}
-        شماره تلفن: ${userFormData.phone}
-        آدرس: ${userFormData.address}
-        شهر: ${userFormData.city}
-  
-        اقلام خرید:
-        ${cart.map((item, index) => `${index + 1}. ${item.name} - ${item.quantity} عدد`).join('\n')}
-  
-        مجموع خرید: ${totalAmount.toLocaleString()} تومان
+      با سلام و احترام،
+      
+      درخواست شما با موفقیت ارسال شد و در حال پیگیری می‌باشد. از خرید شما سپاسگزاریم.
+      
+      اطلاعات مشتری:
+      نام: ${userFormData.name}
+      شماره تلفن: ${userFormData.phone}
+      آدرس: ${userFormData.address}
+      شهر: ${userFormData.city}
+      
+      اقلام خرید:
+      ${cart.map((item, index) => `${index + 1}. ${item.name} - ${item.quantity} عدد`).join('\n')}
+      
+      مجموع خرید: ${totalAmount.toLocaleString()} تومان
+      
+      با تشکر از شما برای خرید از فروشگاه ما. در صورت نیاز به هر گونه اطلاعات بیشتر، با ما در تماس باشید.
       `;
-  
+      
       const encodedMessage = encodeURIComponent(userMessage);
       const whatsappNumber = '989388780198'; // شماره واتساپ شما
       const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
-  
+      
+      // باز کردن لینک در پنجره جدید
+      window.open(whatsappLink, '_blank');
+      
       // باز کردن لینک در پنجره جدید
       window.open(whatsappLink, '_blank');
   
