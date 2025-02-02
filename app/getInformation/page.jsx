@@ -15,20 +15,36 @@ const Page = () => {
     const [showAlert, setShowAlert] = useState(false);
     const router = useRouter();  // Initializing useRouter
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Save form data to localStorage
-        localStorage.setItem('userFormData', JSON.stringify(formData));
-        localStorage.setItem('user', JSON.stringify(formData)); // ذخیره کردن اطلاعات کاربر برای لاگین
-
-        setShowAlert(true);
-
-        setTimeout(() => {
-            setShowAlert(false);
-            // Redirect to the "buyBasket" page after 2 seconds
-            router.push('/buyBasket');
-        }, 2000);
+        
+        const response = await fetch('/api/user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+        });
+    
+        console.log('Response Status:', response.status);
+    
+        // خواندن محتوای پاسخ به عنوان متن
+        const responseBody = await response.text();  // استفاده از `text()` به جای `json()`
+    
+        // در اینجا بررسی کنید که وضعیت پاسخ صحیح است
+        if (!response.ok) {
+            console.error("Error with response:", responseBody);
+            return;
+        }
+    
+        // حالا می‌توانید پاسخ را به صورت json بخوانید
+        try {
+            const result = JSON.parse(responseBody);  // استفاده از `JSON.parse()` به جای `response.json()`
+            console.log(result);
+            setShowAlert(true);
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+        }
     };
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
