@@ -51,7 +51,7 @@ const CoffeeShop = () => {
       const quantity = selected[flavorName];
       const flavor = flavors.find((f) => f.name === flavorName);
       if (flavor) {
-        addToCart(flavor.name, 400000, quantity);
+        addToCart(flavor.name, 350000, quantity);
       }
     });
 
