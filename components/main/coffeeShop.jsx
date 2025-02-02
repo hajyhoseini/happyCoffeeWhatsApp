@@ -141,7 +141,7 @@ const CoffeeShop = () => {
                   <p
                     className={`text-sm sm:text-lg mb-3 ${isDarkMode ? "text-white" : "text-gray-700"} shadow-sm`}
                   >
-                    400,000 تومان
+                    350,000 تومان
                   </p>
 
                   {selected[flavor.name] ? (
