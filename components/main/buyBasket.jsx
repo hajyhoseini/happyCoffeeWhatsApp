@@ -10,6 +10,7 @@ import CartSummary from "../detailical/buyBasket/CartSummary";
 import EmptyCart from "../detailical/buyBasket/EmptyCart";
 import PurchaseModal from "../detailical/buyBasket/PurchaseModal";
 import CartItem from "../detailical/buyBasket/cartItem";
+import moment from "moment-jalaali"; // اضافه کردن کتابخانه برای تاریخ شمسی
 
 const BuyBasket = () => {
   const { isDarkMode } = useTheme();
@@ -25,14 +26,13 @@ const BuyBasket = () => {
     const user = localStorage.getItem("userInfo");  // تغییر از "user" به "userInfo"
     console.log('مقدار user در localStorage:', user);  // چاپ مقدار برای اطمینان
     setIsLoggedIn(!!user);  // بررسی می‌کند که اگر اطلاعات کاربر وجود داشت، true می‌شود
-};
+  };
 
-const checkFormCompletion = () => {
+  const checkFormCompletion = () => {
     const userFormData = localStorage.getItem("userFormData");  // بررسی اطلاعات فرم
     console.log('مقدار اطلاعات فرم در localStorage:', userFormData);  // چاپ مقدار برای اطمینان
     setIsFormComplete(!!userFormData);  // بررسی می‌کند که اگر اطلاعات فرم وجود داشت، true می‌شود
-};
-
+  };
 
   useEffect(() => {
     checkLoginStatus();
@@ -45,14 +45,17 @@ const checkFormCompletion = () => {
 
   const handleConfirm = () => {
     if (isLoggedIn) {
-        const userFormData = JSON.parse(localStorage.getItem('userFormData'));
+      const userFormData = JSON.parse(localStorage.getItem('userFormData'));
 
-        if (!userFormData) {
-            console.error("User form data not found in localStorage");
-            return;
-        }
+      if (!userFormData) {
+        console.error("User form data not found in localStorage");
+        return;
+      }
 
-        const userMessage = `
+      // دریافت تاریخ شمسی
+      const purchaseDate = moment().format('jYYYY/jMM/jDD'); // تاریخ شمسی
+
+      const userMessage = `
         با سلام و احترام،
 
         درخواست شما با موفقیت ارسال شد و در حال پیگیری می‌باشد. از خرید شما سپاسگزاریم.
@@ -63,41 +66,41 @@ const checkFormCompletion = () => {
         آدرس: ${userFormData.address}
         شهر: ${userFormData.city}
 
+        تاریخ خرید: ${purchaseDate}
+
         اقلام خرید:
         ${cart.map((item, index) => `${index + 1}. ${item.name} - ${item.quantity} عدد`).join('\n')}
 
         مجموع خرید: ${totalAmount.toLocaleString()} تومان
 
         با تشکر از شما برای خرید از فروشگاه ما. در صورت نیاز به هر گونه اطلاعات بیشتر، با ما در تماس باشید.
-        `;
+      `;
 
-        const encodedMessage = encodeURIComponent(userMessage);
-        const whatsappNumber = '989121723448'; 
-        const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
+      const encodedMessage = encodeURIComponent(userMessage);
+      const whatsappNumber = '989121723448'; 
+      const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
 
-        console.log("Generated WhatsApp Link:", whatsappLink); // بررسی مقدار لینک در کنسول
+      console.log("Generated WhatsApp Link:", whatsappLink); // بررسی مقدار لینک در کنسول
 
-        // باز کردن لینک واتساپ
-        setTimeout(() => {
-            window.location.href = whatsappLink;
-        }, 1000);
+      // باز کردن لینک واتساپ
+      setTimeout(() => {
+        window.location.href = whatsappLink;
+      }, 1000);
 
-        // پاک کردن سبد خرید از localStorage و context
-        localStorage.removeItem("cart");
-        setCart([]);  
+      // پاک کردن سبد خرید از localStorage و context
+      localStorage.removeItem("cart");
+      setCart([]);  
 
-        // هدایت به صفحه اصلی بعد از خرید
-        setTimeout(() => {
-            router.push("/");
-        }, 2000); 
+      // هدایت به صفحه اصلی بعد از خرید
+      setTimeout(() => {
+        router.push("/");
+      }, 2000); 
     } else {
-        console.log("کاربر وارد سیستم نشده است.");
+      console.log("کاربر وارد سیستم نشده است.");
     }
 
     setShowModal(false); // بستن مدال بعد از ارسال
-};
-
-
+  };
 
   const totalAmount = cart.reduce((total, item) => total + item.quantity * item.price, 0);
 
