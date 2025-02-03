@@ -72,7 +72,7 @@ const checkFormCompletion = () => {
         `;
 
         const encodedMessage = encodeURIComponent(userMessage);
-        const whatsappNumber = '989223803935'; 
+        const whatsappNumber = '989121723448'; 
         const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
 
         console.log("Generated WhatsApp Link:", whatsappLink); // بررسی مقدار لینک در کنسول
