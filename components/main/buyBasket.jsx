@@ -11,26 +11,25 @@ import EmptyCart from "../detailical/buyBasket/EmptyCart";
 import PurchaseModal from "../detailical/buyBasket/PurchaseModal";
 import CartItem from "../detailical/buyBasket/cartItem";
 
-
 const BuyBasket = () => {
   const { isDarkMode } = useTheme();
   const { cart, setCart, removeFromCart, addToCart } = useCart();
   const router = useRouter();
 
-  const [showModal, setShowModal] = useState(false); // وضعیت برای نمایش مدال
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // وضعیت لاگین
-  const [isFormComplete, setIsFormComplete] = useState(false); // بررسی تکمیل فرم
+  const [showModal, setShowModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isFormComplete, setIsFormComplete] = useState(false);
 
   // چک کردن وضعیت لاگین از localStorage
   const checkLoginStatus = () => {
     const user = localStorage.getItem("user");
-    setIsLoggedIn(!!user); // اگر کاربر وجود داشته باشد، لاگین است
+    setIsLoggedIn(!!user);  // بررسی می‌کند که اگر اطلاعات کاربر وجود داشت، true می‌شود
   };
 
   // چک کردن وضعیت تکمیل فرم از localStorage
   const checkFormCompletion = () => {
     const userFormData = localStorage.getItem("userFormData");
-    setIsFormComplete(!!userFormData); // اگر داده‌های فرم موجود باشد، فرم تکمیل شده است
+    setIsFormComplete(!!userFormData);  // بررسی می‌کند که اگر اطلاعات فرم وجود داشت، true می‌شود
   };
 
   useEffect(() => {
@@ -38,16 +37,14 @@ const BuyBasket = () => {
     checkFormCompletion();
   }, []);
 
-  // دکمه تکمیل خرید
   const handleCompletePurchaseClick = () => {
     setShowModal(true); // نمایش مدال
   };
 
-  // تایید خرید
   const handleConfirm = () => {
     if (isLoggedIn) {
       const userFormData = JSON.parse(localStorage.getItem('userFormData'));
-  
+
       const userMessage = `
       با سلام و احترام،
       
@@ -66,35 +63,26 @@ const BuyBasket = () => {
       
       با تشکر از شما برای خرید از فروشگاه ما. در صورت نیاز به هر گونه اطلاعات بیشتر، با ما در تماس باشید.
       `;
-      
+
       const encodedMessage = encodeURIComponent(userMessage);
-      const whatsappNumber = '989388780198'; // شماره واتساپ شما
+      const whatsappNumber = '989388780198'; 
       const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
-      
-      // باز کردن لینک در پنجره جدید
+
       window.open(whatsappLink, '_blank');
-      
-      // باز کردن لینک در پنجره جدید
-      window.open(whatsappLink, '_blank');
-  
-      // حذف سبد خرید از localStorage و تنظیم مجدد سبد خرید
+
       localStorage.removeItem("cart");
-      setCart([]);
-  
-      // ریدایرکت به صفحه اصلی بعد از 2 ثانیه
+      setCart([]);  // پاک کردن سبد خرید پس از ارسال
+
       setTimeout(() => {
-        router.push("/");  // ریدایرکت به صفحه اصلی
-      }, 2000);  // 2 ثانیه تاخیر
-  
+        router.push("/");  // هدایت به صفحه اصلی بعد از چند ثانیه
+      }, 2000); 
     } else {
       console.log("کاربر وارد سیستم نشده است.");
     }
-  
-    setShowModal(false); // بستن مدال
-  };
-  
 
-  // محاسبه مجموع قیمت سبد خرید
+    setShowModal(false); // بستن مدال بعد از ارسال
+  };
+
   const totalAmount = cart.reduce((total, item) => total + item.quantity * item.price, 0);
 
   return (

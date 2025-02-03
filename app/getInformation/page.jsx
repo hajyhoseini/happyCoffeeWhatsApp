@@ -1,5 +1,5 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { FaCheck } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
@@ -13,7 +13,15 @@ const Page = () => {
         city: '',
     });
     const [showAlert, setShowAlert] = useState(false);
+    const [isFormComplete, setIsFormComplete] = useState(false); // اضافه کردن وضعیت تکمیل فرم
     const router = useRouter();  // Initializing useRouter
+
+    // بررسی وضعیت تکمیل فرم
+    useEffect(() => {
+        const { name, phone, address, city } = formData;
+        // فرم تکمیل شده است اگر همه فیلدها پر شده باشند
+        setIsFormComplete(name && phone && address && city);
+    }, [formData]);  // زمانی که داده‌ها تغییر کنند، بررسی تکمیل بودن فرم انجام می‌شود.
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,22 +32,27 @@ const Page = () => {
             body: JSON.stringify(formData),
         });
     
-        console.log('Response Status:', response.status);
-    
-        // خواندن محتوای پاسخ به عنوان متن
         const responseBody = await response.text();  // استفاده از `text()` به جای `json()`
     
-        // در اینجا بررسی کنید که وضعیت پاسخ صحیح است
         if (!response.ok) {
             console.error("Error with response:", responseBody);
             return;
         }
     
-        // حالا می‌توانید پاسخ را به صورت json بخوانید
         try {
-            const result = JSON.parse(responseBody);  // استفاده از `JSON.parse()` به جای `response.json()`
+            const result = JSON.parse(responseBody);
             console.log(result);
+    
+            // ذخیره اطلاعات در localStorage
+            localStorage.setItem('userInfo', JSON.stringify(formData));
+    
+            // تغییر وضعیت فرم به تکمیل شده
+            localStorage.setItem('userFormData', JSON.stringify(formData));
+            
             setShowAlert(true);
+    
+            // برو به صفحه بعدی
+            router.push('/buyBasket');
         } catch (error) {
             console.error("Error parsing JSON:", error);
         }
@@ -118,6 +131,7 @@ const Page = () => {
                         <button
                             type="submit"
                             className={`w-full p-2 rounded-lg text-white ${isDarkMode ? 'bg-yellow-500' : 'bg-yellow-700'} hover:bg-yellow-600 transition duration-300`}
+                            disabled={!isFormComplete}  // غیرفعال کردن دکمه ثبت اطلاعات تا زمانی که فرم تکمیل نشده باشد
                         >
                             ثبت اطلاعات
                         </button>

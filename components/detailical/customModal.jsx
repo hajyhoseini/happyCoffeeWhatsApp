@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
-import { FaTimes, FaCheck, FaClipboardList } from "react-icons/fa"; // آیکون‌ها برای دکمه‌ها
+import { FaTimes, FaCheck, FaClipboardList } from "react-icons/fa";
 
 const CustomModal = ({ show, onClose, onConfirm, isFormComplete }) => {
   return (
@@ -10,7 +10,7 @@ const CustomModal = ({ show, onClose, onConfirm, isFormComplete }) => {
           <span>تکمیل خرید</span>
           <FaTimes
             size={20}
-            onClick={onClose} // بستن مدال با کلیک بر آیکون
+            onClick={onClose}
             className="cursor-pointer hover:text-red-600"
           />
         </Modal.Title>
@@ -19,22 +19,26 @@ const CustomModal = ({ show, onClose, onConfirm, isFormComplete }) => {
         <p>آیا مطمئنید که می‌خواهید فرآیند خرید خود را تکمیل کنید؟</p>
       </Modal.Body>
       <Modal.Footer className="w-full flex justify-center gap-4">
+        {/* دکمه "تکمیل مشخصات" غیرفعال وقتی که فرم تکمیل شده است */}
         <Button
           variant="outline-info"
           href="/getInformation"
-          className={`mx-2 bg-brown-700 hover:bg-brown-800 text-white font-medium py-3 px-8 rounded-full shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 ${isFormComplete ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`mx-2 bg-brown-700 hover:bg-brown-800 text-white font-medium py-3 px-8 rounded-full shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 ${
+            isFormComplete ? "opacity-50 pointer-events-none" : ""
+          }`}
           aria-label="تکمیل مشخصات"
-          style={isFormComplete ? { pointerEvents: "none" } : {}}
         >
           <FaClipboardList className="text-xl text-white" />
           <span className="text-sm font-semibold">تکمیل مشخصات</span>
         </Button>
 
+        {/* دکمه "تایید" فعال وقتی که فرم تکمیل شده است */}
         <Button
           variant="success"
           onClick={onConfirm}
-          className="mx-2 bg-brown-700 hover:bg-brown-800 text-white font-medium py-3 px-8 rounded-full shadow-xl transition-all duration-300 transform hover:scale-105"
-          disabled={!isFormComplete} // اینجا دکمه تایید فقط وقتی فعال است که فرم تکمیل شده باشد
+          className={`mx-2 bg-brown-700 hover:bg-brown-800 text-white font-medium py-3 px-8 rounded-full shadow-xl transition-all duration-300 transform hover:scale-105 ${
+            isFormComplete ? "" : "opacity-50 pointer-events-none"
+          }`}
         >
           <FaCheck className="mr-2 text-green-600" />
           تایید
