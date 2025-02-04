@@ -3,6 +3,15 @@ import React, { useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import emailjs from "emailjs-com";
 
+// اتصال به Supabase
+import { createClient } from '@supabase/supabase-js';
+import Spinner from "@/components/detailical/spinner";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL, 
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
+
 export default function Register() {
   const { isDarkMode } = useTheme();
 
@@ -18,9 +27,14 @@ export default function Register() {
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [userInputCode, setUserInputCode] = useState("");
   const [isCodeValid, setIsCodeValid] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // ارسال کد تأیید به ایمیل
   const sendVerificationEmail = () => {
+    setIsLoading(true); // شروع لودینگ
     const code = Math.floor(100000 + Math.random() * 900000).toString(); // کد ۶ رقمی تصادفی
     const templateParams = {
       to_email: email,
@@ -41,10 +55,12 @@ export default function Register() {
           console.log("ایمیل ارسال شد:", response);
           setVerificationCode(code);
           setIsCodeSent(true);
+          setIsLoading(false); // پایان لودینگ
         },
         (error) => {
           console.error("خطا در ارسال ایمیل:", error);
           alert(`ارسال ایمیل با مشکل مواجه شد: ${error.text}`);
+          setIsLoading(false); // پایان لودینگ
         }
       );
   };
@@ -59,14 +75,52 @@ export default function Register() {
     }
   };
 
+  // ارسال اطلاعات به سوپابیس
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // بررسی اینکه رمزها همخوانی دارند یا نه
+    if (password !== confirmPassword) {
+      alert("رمز عبور و تأیید رمز عبور با هم تطابق ندارند.");
+      return;
+    }
+
+    if (isCodeValid) {
+      setIsLoading(true); // شروع لودینگ
+
+      const { data, error } = await supabase
+        .from("register")  // نام تیبل شما در سوپابیس
+        .insert([
+          {
+            username,
+            email,
+            password,
+            confirm_password: confirmPassword,  // ارسال confirm_password به Supabase
+            verification_code: verificationCode, // ارسال verification_code به Supabase
+          },
+        ]);
+
+      if (error) {
+        console.error("Error inserting data:", error.message);
+        alert("خطا در ثبت‌نام. لطفا دوباره تلاش کنید.");
+      } else {
+        alert("ثبت‌نام با موفقیت انجام شد!");
+      }
+
+      setIsLoading(false); // پایان لودینگ
+    } else {
+      alert("لطفاً کد تایید را وارد کنید.");
+    }
+  };
+
   return (
-    <div className={`mt-16 bg-custom-image-myUser bg-cover bg-center h-64 w-full flex items-center justify-center min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-white/60"}`}>
-      <div className={`backdrop-blur-lg rounded-lg p-5 shadow-lg w-96 mb-40 lg:mb-36 ${isDarkMode ? "bg-gray-800/50" : "bg-white/50"}`}>
+    <div className={`bg-custom-image-myUser bg-cover bg-center h-64 w-full flex items-center justify-center min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-white/60"}`}>
+      <div className={`mt-28 backdrop-blur-lg rounded-lg p-5 shadow-lg w-96 mb-40 lg:mb-36 ${isDarkMode ? "bg-gray-800/50" : "bg-white/50"}`}>
         <h2 className={`text-2xl font-semibold text-center mb-6 ${isDarkMode ? "text-white" : "text-black"}`}>
           ثبت‌نام در سایت قهوه من ❤️
         </h2>
 
-        <form action="#" method="POST">
+        <form onSubmit={handleSubmit}>
           {formFields.map((field) => (
             <div key={field.id} className="mb-4">
               <label htmlFor={field.id} className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
@@ -78,9 +132,12 @@ export default function Register() {
                 name={field.id}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={field.placeholder}
-                value={field.id === "email" ? email : ""}
+                value={field.id === "email" ? email : field.id === "username" ? username : field.id === "password" ? password : field.id === "confirmPassword" ? confirmPassword : ""}
                 onChange={(e) => {
                   if (field.id === "email") setEmail(e.target.value);
+                  if (field.id === "username") setUsername(e.target.value);
+                  if (field.id === "password") setPassword(e.target.value);
+                  if (field.id === "confirmPassword") setConfirmPassword(e.target.value);
                 }}
                 disabled={field.id === "email" && isCodeSent}
               />
@@ -88,15 +145,15 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={sendVerificationEmail}
-                  className="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-2 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled={isLoading}
                 >
-                  ارسال کد تایید
+                  {isLoading ? <Spinner /> : "ارسال کد تایید"}
                 </button>
               )}
             </div>
           ))}
 
-          {/* فیلد کد تایید */}
           {isCodeSent && !isCodeValid && (
             <div className="mb-4">
               <label htmlFor="verificationCode" className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
@@ -114,34 +171,19 @@ export default function Register() {
                 type="button"
                 onClick={validateCode}
                 className="mt-2 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                disabled={isLoading}
               >
-                تایید کد
+                {isLoading ? <Spinner /> : "تایید کد"}
               </button>
             </div>
           )}
 
-          <div className="mb-6">
-            <div className="flex justify-around items-center mt-4">
-              <div>
-                <input type="checkbox" id="remember" name="remember" className="text-blue-500 me-1 size-4" />
-                <label htmlFor="remember" className={`text-gray-600 ${isDarkMode ? "text-white" : "text-black"}`}>
-                  مرا به خاطر بسپار
-                </label>
-              </div>
-              <a href="/login" className={`text-lg hover:text-green-400 ${isDarkMode ? "text-green-500" : "text-green-700"}`}>
-                ورود
-              </a>
-            </div>
-          </div>
-
           <button
             type="submit"
-            className={`w-full py-2 rounded-lg ${
-              isCodeValid ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
-            }`}
-            disabled={!isCodeValid}
+            className={`w-full py-2 rounded-lg ${isCodeValid ? "bg-green-500 hover:bg-green-600 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"}`}
+            disabled={!isCodeValid || isLoading}
           >
-            ثبت‌نام
+            {isLoading ? <Spinner /> : "ثبت‌نام"}
           </button>
         </form>
       </div>
