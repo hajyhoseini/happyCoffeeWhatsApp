@@ -13,6 +13,7 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import { CartProvider } from '@/context/cartContext';
 import CallToHelper from '@/components/detailical/callToHelper';
 import BackgroundMusic from '@/components/detailical/BackgroundMusic';
+import { UserProvider } from '@/context/userContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function Layout({ children }) {
         {/* سایر متا تگ‌ها */}
       </Head>
       <CartProvider>
+        <UserProvider>
         <ThemeProvider>
           <html lang="en" dir="rtl">
             <body>
@@ -66,6 +68,7 @@ export default function Layout({ children }) {
             </body>
           </html>
         </ThemeProvider>
+        </UserProvider>
       </CartProvider>
     </>
   );

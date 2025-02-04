@@ -36,7 +36,7 @@ const HappySection = () => {
           isDarkMode
             ? "bg-[#5D4037] text-white backdrop-blur-sm"
             : "bg-[#F4E1C1] text-gray-800"
-        } text-lg md:text-xl leading-relaxed p-4 rounded-lg shadow-md transition-all duration-500`}
+        } text-lg md:text-xl leading-relaxed p-4 rounded-lg md:w-2/4 shadow-md transition-all duration-500`}
       >
         قهوه ما فقط طعمی خوشمزه نیست، بلکه یک تجربه است. اگر از طعم عالی
         قهوه‌های ما لذت می‌برید، پس چرا در شبکه‌های اجتماعی با ما همراه نشوید؟

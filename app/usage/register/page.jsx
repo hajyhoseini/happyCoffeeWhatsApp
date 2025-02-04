@@ -114,79 +114,95 @@ export default function Register() {
   };
 
   return (
-    <div className={`bg-custom-image-myUser bg-cover bg-center h-64 w-full flex items-center justify-center min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-white/60"}`}>
-      <div className={`mt-28 backdrop-blur-lg rounded-lg p-5 shadow-lg w-96 mb-40 lg:mb-36 ${isDarkMode ? "bg-gray-800/50" : "bg-white/50"}`}>
-        <h2 className={`text-2xl font-semibold text-center mb-6 ${isDarkMode ? "text-white" : "text-black"}`}>
-          ثبت‌نام در سایت قهوه من ❤️
-        </h2>
+<div className={`bg-custom-image-myUser bg-cover bg-center h-64 w-full flex items-center justify-center min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-white/60"}`}>
+  <div className={`mt-28 backdrop-blur-lg rounded-lg p-5 shadow-lg w-96 mb-40 lg:mb-36 ${isDarkMode ? "bg-gray-800/50" : "bg-white/50"}`}>
+    <h2 className={`text-2xl font-semibold text-center mb-6 ${isDarkMode ? "text-white" : "text-black"}`}>
+      ثبت‌نام در سایت قهوه من ❤️
+    </h2>
 
-        <form onSubmit={handleSubmit}>
-          {formFields.map((field) => (
-            <div key={field.id} className="mb-4">
-              <label htmlFor={field.id} className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
-                {field.label}
-              </label>
-              <input
-                type={field.type}
-                id={field.id}
-                name={field.id}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder={field.placeholder}
-                value={field.id === "email" ? email : field.id === "username" ? username : field.id === "password" ? password : field.id === "confirmPassword" ? confirmPassword : ""}
-                onChange={(e) => {
-                  if (field.id === "email") setEmail(e.target.value);
-                  if (field.id === "username") setUsername(e.target.value);
-                  if (field.id === "password") setPassword(e.target.value);
-                  if (field.id === "confirmPassword") setConfirmPassword(e.target.value);
-                }}
-                disabled={field.id === "email" && isCodeSent}
-              />
-              {field.id === "email" && !isCodeSent && (
-                <button
-                  type="button"
-                  onClick={sendVerificationEmail}
-                  className="mt-2 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled={isLoading}
-                >
-                  {isLoading ? <Spinner /> : "ارسال کد تایید"}
-                </button>
-              )}
-            </div>
-          ))}
-
-          {isCodeSent && !isCodeValid && (
-            <div className="mb-4">
-              <label htmlFor="verificationCode" className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
-                کد تایید
-              </label>
-              <input
-                type="text"
-                id="verificationCode"
-                name="verificationCode"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="کد تایید خود را وارد کنید"
-                onChange={(e) => setUserInputCode(e.target.value)}
-              />
-              <button
-                type="button"
-                onClick={validateCode}
-                className="mt-2 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                disabled={isLoading}
-              >
-                {isLoading ? <Spinner /> : "تایید کد"}
-              </button>
-            </div>
+    <form onSubmit={handleSubmit}>
+      {formFields.map((field) => (
+        <div key={field.id} className="mb-4">
+          <label htmlFor={field.id} className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
+            {field.label}
+          </label>
+          <input
+            type={field.type}
+            id={field.id}
+            name={field.id}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder={field.placeholder}
+            value={field.id === "email" ? email : field.id === "username" ? username : field.id === "password" ? password : field.id === "confirmPassword" ? confirmPassword : ""}
+            onChange={(e) => {
+              if (field.id === "email") setEmail(e.target.value);
+              if (field.id === "username") setUsername(e.target.value);
+              if (field.id === "password") setPassword(e.target.value);
+              if (field.id === "confirmPassword") setConfirmPassword(e.target.value);
+            }}
+            disabled={field.id === "email" && isCodeSent}
+          />
+          {field.id === "email" && !isCodeSent && (
+            <button
+              type="button"
+              onClick={sendVerificationEmail}
+              className="mt-2 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isLoading}
+            >
+              {isLoading ? <Spinner /> : "ارسال کد تایید"}
+            </button>
           )}
+        </div>
+      ))}
 
+      {isCodeSent && !isCodeValid && (
+        <div className="mb-4">
+          <label htmlFor="verificationCode" className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
+            کد تایید
+          </label>
+          <input
+            type="text"
+            id="verificationCode"
+            name="verificationCode"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="کد تایید خود را وارد کنید"
+            onChange={(e) => setUserInputCode(e.target.value)}
+          />
           <button
-            type="submit"
-            className={`w-full py-2 rounded-lg ${isCodeValid ? "bg-green-500 hover:bg-green-600 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"}`}
-            disabled={!isCodeValid || isLoading}
+            type="button"
+            onClick={validateCode}
+            className="mt-2 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            disabled={isLoading}
           >
-            {isLoading ? <Spinner /> : "ثبت‌نام"}
+            {isLoading ? <Spinner /> : "تایید کد"}
           </button>
-        </form>
+        </div>
+      )}
+
+      <button
+        type="submit"
+        className={`w-full py-2 rounded-lg ${isCodeValid ? "bg-green-500 hover:bg-green-600 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"}`}
+        disabled={!isCodeValid || isLoading}
+      >
+        {isLoading ? <Spinner /> : "ثبت‌نام"}
+      </button>
+
+      {/* دکمه‌های ورود و بازیابی اطلاعات */}
+      <div className="mt-4 flex justify-between items-center">
+        <p className={`text-sm ${isDarkMode ? "text-white" : "text-black"} font-semibold`}>
+          <a href="/login" className="text-green-800 hover:underline">
+            ورود به حساب کاربری
+          </a>
+        </p>
+        <p className={`text-sm ${isDarkMode ? "text-white" : "text-black"} font-semibold`}>
+          <a href="/forget" className="text-blue-800 hover:underline">
+            بازیابی رمز عبور
+          </a>
+        </p>
       </div>
-    </div>
+    </form>
+  </div>
+</div>
+
+
   );
 }
