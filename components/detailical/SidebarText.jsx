@@ -1,9 +1,21 @@
+import { useState, useEffect } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { FaCoffee, FaClipboardList, FaSignInAlt, FaUserPlus, FaEnvelopeOpenText } from 'react-icons/fa';
 import { Nav } from 'react-bootstrap';
 
 const SidebarText = ({ isOpen, setIsSidebarOpen }) => {
   const { isDarkMode } = useTheme();
+  const [user, setUser] = useState(null); // برای ذخیره اطلاعات کاربر
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem('user');  // دریافت داده‌ها از localStorage
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));  // ذخیره کردن به صورت شیء
+      }
+    }
+  }, []);
+  
 
   return (
     <div
@@ -21,17 +33,26 @@ const SidebarText = ({ isOpen, setIsSidebarOpen }) => {
         {/* اطلاعات پروفایل */}
         <div className="flex items-center justify-center space-x-6 sm:flex-col sm:space-x-0 sm:space-y-4">
           <img
-            src="/image/userMy.webp"
+            src="/image/headerBg.webp"
             alt="Profile"
             className="w-24 h-24 rounded-full border-4 border-white shadow-lg transform hover:scale-105 transition-transform"
           />
           <div className="space-y-3 text-center">
-            <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105  ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm' : 'text-black bg-yellow-700/95 hover:bg-yellow-600'}`}>
-              نام کاربری : A.h.h
-            </h1>
-            <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm' : 'text-black bg-yellow-700/95 hover:bg-yellow-600'}`}>
-              آیدی : 810804
-            </h1>
+            {/* نمایش نام کاربری و ایمیل */}
+            {user ? (
+              <>
+                <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105  ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm' : 'text-black bg-yellow-700/95 hover:bg-yellow-600'}`}>
+                  نام کاربری : {user.username}
+                </h1>
+                <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm' : 'text-black bg-yellow-700/95 hover:bg-yellow-600'}`}>
+                  ایمیل : {user.email}
+                </h1>
+              </>
+            ) : (
+              <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm' : 'text-black bg-yellow-700/95 hover:bg-yellow-600'}`}>
+                کاربر موجود نیست. لطفا وارد حساب خود شوید.
+              </h1>
+            )}
           </div>
         </div>
 
@@ -86,7 +107,6 @@ const SidebarText = ({ isOpen, setIsSidebarOpen }) => {
             </Nav.Link>
           </Nav.Item>
 
-          {/* دکمه به ما بپیوندید: در حالت موبایل به طور کامل ردیف سوم را بگیرد */}
           <Nav.Item className="w-full sm:w-full md:w-full text-center my-3">
             <Nav.Link
               href="/behappy"
