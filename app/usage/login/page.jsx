@@ -1,48 +1,41 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useTheme } from "@/context/ThemeContext";
-import { createClient } from "@supabase/supabase-js";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // تغییر در نسخه‌های جدید
+import { useTheme } from "@/context/ThemeContext"; // استفاده از context برای مدیریت حالت شب و روز
+import { createClient } from "@supabase/supabase-js"; // اتصال به سوپابیس
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.NEXT_PUBLIC_SUPABASE_URL, // آدرس URL سوپابیس
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY // کلید عمومی سوپابیس
 );
 
-export default function ForgetPassword() {
+export default function Login() {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { isDarkMode } = useTheme();
   const router = useRouter();
+  const { isDarkMode } = useTheme(); // دریافت وضعیت حالت شب و روز از context
+
+  // استفاده از useEffect برای اطمینان از دسترسی به localStorage فقط در کلاینت
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      // اگر وارد سیستم شده باشد به صفحه دیگری هدایت می‌شود
+      if (isLoggedIn) {
+        router.push("/users");
+      }
+    }
+  }, [router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ابتدا بررسی می‌کنیم که نام کاربری، ایمیل و کد اعتبارسنجی صحیح است یا نه.
-    if (newPassword !== confirmPassword) {
-      setError("رمز عبور جدید و تایید آن یکسان نیست.");
-      return;
-    }
-
-    // تبدیل verificationCode به عدد
-    const verificationCodeInt = parseInt(verificationCode);
-
-    // بررسی صحت وارد کردن کد تایید به صورت عدد
-    if (isNaN(verificationCodeInt)) {
-      setError("کد تایید باید یک عدد باشد.");
-      return;
-    }
-
+    // ارسال درخواست به سوپابیس برای بررسی صحت نام کاربری و رمز عبور
     const { data, error } = await supabase
-      .from("register") // نام جدول شما باید درست باشد
+      .from("register") // نام تیبل شما در سوپابیس
       .select("*")
       .eq("username", username)
-      .eq("email", email)
-      .eq("verification_code", verificationCodeInt); // فیلتر کد تایید به صورت عددی
+      .eq("password", password); // بررسی تطابق نام کاربری و رمز عبور
 
     if (error) {
       setError("خطا در برقراری ارتباط با سرور");
@@ -50,25 +43,14 @@ export default function ForgetPassword() {
       return;
     }
 
-    console.log(data); // اینجا داده‌های دریافتی از سرور را چاپ می‌کنیم
-
     if (data.length > 0) {
-      // اگر داده یافت شد، رمز عبور جدید را بروز رسانی می‌کنیم
-      const { updateError } = await supabase
-        .from("register")
-        .update({ password: newPassword }) // بروزرسانی رمز عبور
-        .eq("id", data[0].id);
-
-      if (updateError) {
-        setError("خطا در بروز رسانی رمز عبور.");
-        console.error("Error:", updateError.message);
-        return;
+      // اگر نام کاربری و رمز عبور درست بود
+      if (typeof window !== "undefined") {
+        localStorage.setItem("isLoggedIn", "true");
       }
-
-      // اگر موفقیت‌آمیز بود، کاربر را هدایت به صفحه لاگین می‌کنیم.
-      router.push("/login");
+      router.push("/users"); // هدایت به صفحه دیگر پس از ورود موفقیت‌آمیز
     } else {
-      setError("اطلاعات وارد شده صحیح نیست.");
+      setError("نام کاربری یا رمز عبور اشتباه است");
     }
   };
 
@@ -84,9 +66,10 @@ export default function ForgetPassword() {
             isDarkMode ? "text-white" : "text-gray-800"
           }`}
         >
-          بازیابی رمز عبور
+          ورود به سایت قهوه من
         </h2>
 
+        {/* فرم لاگین */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -108,93 +91,58 @@ export default function ForgetPassword() {
             />
           </div>
 
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className={`block font-semibold mb-2 ${
-                isDarkMode ? "text-gray-300" : "text-gray-700"
-              }`}
-            >
-              ایمیل
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="ایمیل خود را وارد کنید"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="verificationCode"
-              className={`block font-semibold mb-2 ${
-                isDarkMode ? "text-gray-300" : "text-gray-700"
-              }`}
-            >
-              کد تایید
-            </label>
-            <input
-              type="text"
-              id="verificationCode"
-              name="verificationCode"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="کد تایید را وارد کنید"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="newPassword"
-              className={`block font-semibold mb-2 ${
-                isDarkMode ? "text-gray-300" : "text-gray-700"
-              }`}
-            >
-              رمز عبور جدید
-            </label>
-            <input
-              type="password"
-              id="newPassword"
-              name="newPassword"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="رمز عبور جدید را وارد کنید"
-            />
-          </div>
-
           <div className="mb-6">
             <label
-              htmlFor="confirmPassword"
+              htmlFor="password"
               className={`block font-semibold mb-2 ${
                 isDarkMode ? "text-gray-300" : "text-gray-700"
               }`}
             >
-              تایید رمز عبور جدید
+              رمز عبور
             </label>
             <input
               type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="رمز عبور جدید را تایید کنید"
+              placeholder="رمز عبور خود را وارد کنید"
             />
           </div>
 
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <input
+                type="checkbox"
+                id="remember"
+                name="remember"
+                className="text-blue-500"
+              />
+              <label
+                htmlFor="remember"
+                className={` ${
+                  isDarkMode ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
+                مرا به خاطر بسپار
+              </label>
+            </div>
+            <a href="/forget" className="text-blue-500 text-md">
+              فراموشی رمز عبور
+            </a>
+            <a href="/register" className="text-blue-500 text-md">
+              ثبت نام
+            </a>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-green-500 hover:bg-green-400 text-white py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            بازیابی
+            ورود
           </button>
         </form>
       </div>
