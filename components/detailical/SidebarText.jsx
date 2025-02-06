@@ -2,29 +2,58 @@ import { useState, useEffect } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import { FaCoffee, FaClipboardList, FaSignInAlt, FaUserPlus, FaEnvelopeOpenText } from "react-icons/fa";
 import { Nav } from "react-bootstrap";
+import { createClient } from "@supabase/supabase-js";
+
+// ایجاد ارتباط با سوپابیس
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 const SidebarText = ({ isOpen }) => {
   const { isDarkMode } = useTheme();
   const [user, setUser] = useState(null);
+  const [profileImage, setProfileImage] = useState("/image/defaultProfile.webp"); // تصویر پیش‌فرض
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // دریافت اطلاعات به‌صورت جداگانه
+      // دریافت اطلاعات از localStorage
       const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
       const username = localStorage.getItem("username");
       const email = localStorage.getItem("email");
 
       if (isLoggedIn && username && email) {
         setUser({ username, email });
+        // فراخوانی برای دریافت تصویر پروفایل از سوپابیس
+        getProfileImage(email);
       }
     }
   }, []);
 
+  // دریافت تصویر پروفایل از سوپابیس
+  const getProfileImage = async (email) => {
+    try {
+      const { data, error } = await supabase
+        .from("register") // استفاده از جدول "register" برای دریافت اطلاعات
+        .select("profile_image") // انتخاب فقط ستون تصویر پروفایل
+        .eq("email", email) // جستجو بر اساس ایمیل
+        .single(); // دریافت یک رکورد
+
+      if (error) {
+        console.error("خطا در دریافت تصویر پروفایل:", error.details || error.message); // چاپ پیام خطا
+      } else {
+        setProfileImage(data.profile_image || "/image/defaultProfile.webp"); // اگر تصویری وجود نداشت، تصویر پیش‌فرض
+      }
+    } catch (err) {
+      console.error("خطا در دریافت تصویر پروفایل:", err.message); // چاپ خطاهای احتمالی
+    }
+  };
+
   return (
     <div
-      className={`h-full transition-transform duration-300 ease-in-out ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      } ${isDarkMode ? "text-white bg-black/30" : "text-black"}`}
+      className={`h-full transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"} ${
+        isDarkMode ? "text-white bg-black/30" : "text-black"
+      }`}
       style={{
         backgroundImage: "url('/path/to/your/background-image.jpg')",
         backgroundSize: "cover",
@@ -37,28 +66,40 @@ const SidebarText = ({ isOpen }) => {
         {/* اطلاعات پروفایل */}
         <div className="flex items-center justify-center space-x-6 sm:flex-col sm:space-x-0 sm:space-y-4">
           <img
-            src={"/image/defaultProfile.webp"}
+            src={profileImage}
             alt="Profile"
             className="w-24 h-24 rounded-full border-4 border-white shadow-lg transform hover:scale-105 transition-transform"
           />
           <div className="space-y-3 text-center">
             {user ? (
               <>
-                <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
-                  isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm" : "text-black bg-yellow-700/95 hover:bg-yellow-600"
-                }`}>
+                <h1
+                  className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                    isDarkMode
+                      ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
+                      : "text-black bg-yellow-700/95 hover:bg-yellow-600"
+                  }`}
+                >
                   نام کاربری : {user.username}
                 </h1>
-                <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
-                  isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm" : "text-black bg-yellow-700/95 hover:bg-yellow-600"
-                }`}>
+                <h1
+                  className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                    isDarkMode
+                      ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
+                      : "text-black bg-yellow-700/95 hover:bg-yellow-600"
+                  }`}
+                >
                   ایمیل : {user.email}
                 </h1>
               </>
             ) : (
-              <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
-                isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm" : "text-black bg-yellow-700/95 hover:bg-yellow-600"
-              }`}>
+              <h1
+                className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                  isDarkMode
+                    ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
+                    : "text-black bg-yellow-700/95 hover:bg-yellow-600"
+                }`}
+              >
                 کاربر موجود نیست. لطفا وارد حساب خود شوید.
               </h1>
             )}
