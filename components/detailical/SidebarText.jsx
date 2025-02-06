@@ -1,26 +1,30 @@
-import { useState, useEffect } from 'react';
-import { useTheme } from '@/context/ThemeContext';
-import { FaCoffee, FaClipboardList, FaSignInAlt, FaUserPlus, FaEnvelopeOpenText } from 'react-icons/fa';
-import { Nav } from 'react-bootstrap';
+import { useState, useEffect } from "react";
+import { useTheme } from "@/context/ThemeContext";
+import { FaCoffee, FaClipboardList, FaSignInAlt, FaUserPlus, FaEnvelopeOpenText } from "react-icons/fa";
+import { Nav } from "react-bootstrap";
 
-const SidebarText = ({ isOpen, setIsSidebarOpen }) => {
+const SidebarText = ({ isOpen }) => {
   const { isDarkMode } = useTheme();
-  const [user, setUser] = useState(null); // برای ذخیره اطلاعات کاربر
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem('user');  // دریافت داده‌ها از localStorage
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));  // ذخیره کردن به صورت شیء
+      // دریافت اطلاعات به‌صورت جداگانه
+      const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+      const username = localStorage.getItem("username");
+      const email = localStorage.getItem("email");
+
+      if (isLoggedIn && username && email) {
+        setUser({ username, email });
       }
     }
   }, []);
-  
 
   return (
     <div
-      className={`h-full transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
-      ${isDarkMode ? ' text-white bg-black/30' : ' text-black'}`}
+      className={`h-full transition-transform duration-300 ease-in-out ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      } ${isDarkMode ? "text-white bg-black/30" : "text-black"}`}
       style={{
         backgroundImage: "url('/path/to/your/background-image.jpg')",
         backgroundSize: "cover",
@@ -33,23 +37,28 @@ const SidebarText = ({ isOpen, setIsSidebarOpen }) => {
         {/* اطلاعات پروفایل */}
         <div className="flex items-center justify-center space-x-6 sm:flex-col sm:space-x-0 sm:space-y-4">
           <img
-            src="/image/headerBg.webp"
+            src={"/image/defaultProfile.webp"}
             alt="Profile"
             className="w-24 h-24 rounded-full border-4 border-white shadow-lg transform hover:scale-105 transition-transform"
           />
           <div className="space-y-3 text-center">
-            {/* نمایش نام کاربری و ایمیل */}
             {user ? (
               <>
-                <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105  ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm' : 'text-black bg-yellow-700/95 hover:bg-yellow-600'}`}>
+                <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                  isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm" : "text-black bg-yellow-700/95 hover:bg-yellow-600"
+                }`}>
                   نام کاربری : {user.username}
                 </h1>
-                <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm' : 'text-black bg-yellow-700/95 hover:bg-yellow-600'}`}>
+                <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                  isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm" : "text-black bg-yellow-700/95 hover:bg-yellow-600"
+                }`}>
                   ایمیل : {user.email}
                 </h1>
               </>
             ) : (
-              <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm' : 'text-black bg-yellow-700/95 hover:bg-yellow-600'}`}>
+              <h1 className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm" : "text-black bg-yellow-700/95 hover:bg-yellow-600"
+              }`}>
                 کاربر موجود نیست. لطفا وارد حساب خود شوید.
               </h1>
             )}
@@ -58,66 +67,67 @@ const SidebarText = ({ isOpen, setIsSidebarOpen }) => {
 
         {/* بخش ناوبری */}
         <Nav className="d-flex flex-wrap sm:flex-row md:flex-col justify-between py-6">
-          {/* هر آیتم ناوبری */}
           <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center my-3">
             <Nav.Link
               href="/products"
-              className={`rounded-2xl d-flex align-items-center justify-content-center text-lg transform transition-all duration-200 hover:scale-105 ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm' : 'text-black bg-yellow-600/70 hover:bg-yellow-600'} border-4 border-black shadow-lg hover:shadow-2xl hover:scale-105 transition-shadow duration-300`}
+              className={`rounded-2xl d-flex align-items-center justify-content-center text-lg transform transition-all duration-200 hover:scale-105 ${
+                isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm" : "text-black bg-yellow-600/70 hover:bg-yellow-600"
+              } border-4 border-black shadow-lg hover:shadow-2xl`}
             >
               <FaCoffee className="text-red-600 bg-black text-2xl" />
-              <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">
-                طعم‌ها
-              </span>
+              <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">طعم‌ها</span>
             </Nav.Link>
           </Nav.Item>
 
           <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center my-3">
             <Nav.Link
               href="/buyBasket"
-              className={`rounded-2xl d-flex align-items-center justify-content-center text-lg transform transition-all duration-200 hover:scale-105 ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm' : 'text-black bg-yellow-600/70 hover:bg-yellow-600'} border-4 border-black shadow-lg hover:shadow-2xl hover:scale-105 transition-shadow duration-300`}
+              className={`rounded-2xl d-flex align-items-center justify-content-center text-lg transform transition-all duration-200 hover:scale-105 ${
+                isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm" : "text-black bg-yellow-600/70 hover:bg-yellow-600"
+              } border-4 border-black shadow-lg hover:shadow-2xl`}
             >
               <FaClipboardList className="text-yellow-400 bg-black text-2xl" />
-              <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">
-                سفارشات
-              </span>
+              <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">سفارشات</span>
             </Nav.Link>
           </Nav.Item>
-
-          <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center my-3">
-            <Nav.Link
-              href="/login"
-              className={`rounded-2xl d-flex align-items-center justify-content-center text-lg transform transition-all duration-200 hover:scale-105 ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm' : 'text-black bg-yellow-600/70 hover:bg-yellow-600'} border-4 border-black shadow-lg hover:shadow-2xl hover:scale-105 transition-shadow duration-300`}
-            >
-              <FaSignInAlt className="bg-black text-blue-500  text-2xl" />
-              <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">
-                ورود
-              </span>
-            </Nav.Link>
-          </Nav.Item>
-
-          <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center  my-3">
-            <Nav.Link
-              href="/register"
-              className={` rounded-2xl d-flex align-items-center justify-content-center text-lg transform transition-all  border-black duration-200 hover:scale-105 ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm' : 'text-black bg-yellow-600/70 hover:bg-yellow-600 border-black'} border-4 border-black shadow-lg hover:shadow-2xl hover:scale-105 transition-shadow duration-300`}
-            >
-              <FaUserPlus className="bg-black text-green-600  text-2xl" />
-              <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">
-                ثبت‌نام
-              </span>
-            </Nav.Link>
-          </Nav.Item>
-
           <Nav.Item className="w-full sm:w-full md:w-full text-center my-3">
             <Nav.Link
               href="/behappy"
-              className={`rounded-2xl d-flex align-items-center justify-content-center  text-lg transform transition-all duration-200 hover:scale-105 ${isDarkMode ? 'text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm' : 'text-black bg-yellow-600/70 hover:bg-yellow-600'} border-4 border-black shadow-lg hover:shadow-2xl hover:scale-105 transition-shadow duration-300`}
+              className={`rounded-2xl d-flex align-items-center justify-content-center text-lg transform transition-all duration-200 hover:scale-105 ${
+                isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm" : "text-black bg-yellow-600/70 hover:bg-yellow-600"
+              } border-4 border-black shadow-lg hover:shadow-2xl`}
             >
               <FaEnvelopeOpenText className="text-green-300 bg-black text-2xl" />
-              <span className="ps-3   bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">
-                به ما بپیوند
-              </span>
+              <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">به ما بپیوند</span>
             </Nav.Link>
           </Nav.Item>
+          {!user ? (
+            <>
+              <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center my-3">
+                <Nav.Link
+                  href="/login"
+                  className={`rounded-2xl d-flex align-items-center justify-content-center text-lg transform transition-all duration-200 hover:scale-105 ${
+                    isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm" : "text-black bg-yellow-600/70 hover:bg-yellow-600"
+                  } border-4 border-black shadow-lg hover:shadow-2xl`}
+                >
+                  <FaSignInAlt className="bg-black text-blue-500 text-2xl" />
+                  <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">ورود</span>
+                </Nav.Link>
+              </Nav.Item>
+
+              <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center my-3">
+                <Nav.Link
+                  href="/register"
+                  className={`rounded-2xl d-flex align-items-center justify-content-center text-lg transform transition-all border-black duration-200 hover:scale-105 ${
+                    isDarkMode ? "text-white hover:bg-brown-700 bg-brown-800/80 backdrop-blur-sm" : "text-black bg-yellow-600/70 hover:bg-yellow-600 border-black"
+                  } border-4 border-black shadow-lg hover:shadow-2xl`}
+                >
+                  <FaUserPlus className="bg-black text-green-600 text-2xl" />
+                  <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">ثبت‌نام</span>
+                </Nav.Link>
+              </Nav.Item>
+            </>
+          ) : null}
         </Nav>
       </div>
     </div>

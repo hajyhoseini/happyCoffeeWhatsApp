@@ -22,7 +22,7 @@ export default function Login() {
       const isLoggedIn = localStorage.getItem("isLoggedIn");
       // اگر وارد سیستم شده باشد به صفحه دیگری هدایت می‌شود
       if (isLoggedIn) {
-        router.push("/users");
+        router.push("/");
       }
     }
   }, [router]);
@@ -33,7 +33,7 @@ export default function Login() {
     // ارسال درخواست به سوپابیس برای بررسی صحت نام کاربری و رمز عبور
     const { data, error } = await supabase
       .from("register") // نام تیبل شما در سوپابیس
-      .select("*")
+      .select("id, username, email")
       .eq("username", username)
       .eq("password", password); // بررسی تطابق نام کاربری و رمز عبور
 
@@ -45,8 +45,11 @@ export default function Login() {
 
     if (data.length > 0) {
       // اگر نام کاربری و رمز عبور درست بود
+      const user = data[0];
       if (typeof window !== "undefined") {
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("username", user.username);
+        localStorage.setItem("email", user.email);
       }
       router.push("/users"); // هدایت به صفحه دیگر پس از ورود موفقیت‌آمیز
     } else {
@@ -123,9 +126,7 @@ export default function Login() {
               />
               <label
                 htmlFor="remember"
-                className={` ${
-                  isDarkMode ? "text-gray-300" : "text-gray-600"
-                }`}
+                className={`${isDarkMode ? "text-gray-300" : "text-gray-600"}`}
               >
                 مرا به خاطر بسپار
               </label>
