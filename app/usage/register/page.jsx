@@ -12,6 +12,9 @@ const supabase = createClient(
 
 export default function Register() {
   const { isDarkMode } = useTheme();
+  const [email, setEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isCodeSent, setIsCodeSent] = useState(false);
   const [userInputCode, setUserInputCode] = useState("");
   const [isCodeValid, setIsCodeValid] = useState(false);
   const [username, setUsername] = useState("");
@@ -21,23 +24,22 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  const [email, setEmail] = useState(() => localStorage.getItem("email") || "");
-  const [verificationCode, setVerificationCode] = useState(() => localStorage.getItem("verificationCode") || "");
-  const [isCodeSent, setIsCodeSent] = useState(() => localStorage.getItem("isCodeSent") === "true");
-  
-  useEffect(() => {
-    localStorage.setItem("email", email);
-  }, [email]);
-  
-  useEffect(() => {
-    localStorage.setItem("verificationCode", verificationCode);
-  }, [verificationCode]);
-  
-  useEffect(() => {
-    localStorage.setItem("isCodeSent", isCodeSent);
-  }, [isCodeSent]);
-  
   // ارسال کد تایید
+
+
+useEffect(() => {
+  const handleBeforeUnload = (event) => {
+    event.preventDefault();
+    event.returnValue = ""; // این خط باعث نمایش پیام هشدار در برخی مرورگرها می‌شود
+  };
+
+  window.addEventListener("beforeunload", handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+  };
+}, []);
+
   const sendVerificationEmail = () => {
     setIsLoading(true);
     const code = Math.floor(100000 + Math.random() * 900000).toString();
