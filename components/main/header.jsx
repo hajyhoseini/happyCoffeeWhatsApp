@@ -44,7 +44,7 @@ const Header = () => {
             d="M0,128L1440,32L1440,320L0,320Z"
           />
         </svg>
-        <p className={`${isDarkMode? "text-yellow-200":"text-white"}  relative text-xs sm:text-xs lg:text-base font-extrabold text-gray-100 z-30{}`}>
+        <p className={`${isDarkMode? "text-yellow-200":"text-white"}  relative text-base  lg:text-base font-extrabold text-gray-100 z-30{}`}>
           🎉 به "هپی کافی" خوش آمدید! 🎉 <br /> قهوه‌ی شما در انتظار است!
         </p>
       </div>
@@ -71,7 +71,7 @@ const Header = () => {
           <div className="mt-2 sm:mt-0 sm:ml-3 flex justify-center w-full">
             <div className={`bg-yellow-100 p-1 sm:p-0.5 rounded-2xl max-w-xs sm:max-w-sm mx-auto relative overflow-hidden transition-all duration-300 ease-in-out w-full ${isDarkMode ? "bg-yellow-800/80" : "bg-yellow-100/80"}`}>
               <div className="relative z-10 text-center sm:text-left">
-                <h1 className={`text-base sm:text-base lg:text-lg font-extrabold ${isDarkMode ? "text-white " : "text-gray-800"}`}>
+                <h1 className={`text-2xl sm:text-base lg:text-lg font-extrabold ${isDarkMode ? "text-white " : "text-gray-800"}`}>
                   سلام، به دنیای خوشمزه "هپی کافی" خوش آمدید!
                 </h1>
 
