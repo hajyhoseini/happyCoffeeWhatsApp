@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import emailjs from "emailjs-com";
 import { createClient } from "@supabase/supabase-js";
@@ -12,9 +12,6 @@ const supabase = createClient(
 
 export default function Register() {
   const { isDarkMode } = useTheme();
-  const [email, setEmail] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [isCodeSent, setIsCodeSent] = useState(false);
   const [userInputCode, setUserInputCode] = useState("");
   const [isCodeValid, setIsCodeValid] = useState(false);
   const [username, setUsername] = useState("");
@@ -24,6 +21,22 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
+  const [email, setEmail] = useState(() => localStorage.getItem("email") || "");
+  const [verificationCode, setVerificationCode] = useState(() => localStorage.getItem("verificationCode") || "");
+  const [isCodeSent, setIsCodeSent] = useState(() => localStorage.getItem("isCodeSent") === "true");
+  
+  useEffect(() => {
+    localStorage.setItem("email", email);
+  }, [email]);
+  
+  useEffect(() => {
+    localStorage.setItem("verificationCode", verificationCode);
+  }, [verificationCode]);
+  
+  useEffect(() => {
+    localStorage.setItem("isCodeSent", isCodeSent);
+  }, [isCodeSent]);
+  
   // ارسال کد تایید
   const sendVerificationEmail = () => {
     setIsLoading(true);
