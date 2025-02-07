@@ -1,9 +1,11 @@
-"use client"
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import emailjs from "emailjs-com";
 import { createClient } from "@supabase/supabase-js";
 import Spinner from "@/components/detailical/spinner";
+import { useRouter } from "next/navigation";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -12,49 +14,26 @@ const supabase = createClient(
 
 export default function Register() {
   const { isDarkMode } = useTheme();
-
-  // بازیابی مقادیر از localStorage
-  const getLocalStorage = (key, defaultValue) => {
-    if (typeof window !== "undefined") {
-      const storedValue = localStorage.getItem(key);
-      return storedValue ? JSON.parse(storedValue) : defaultValue;
-    }
-    return defaultValue;
-  };
-
-  const [email, setEmail] = useState(getLocalStorage("email", ""));
-  const [verificationCode, setVerificationCode] = useState(getLocalStorage("verificationCode", ""));
-  const [isCodeSent, setIsCodeSent] = useState(getLocalStorage("isCodeSent", false));
-  const [userInputCode, setUserInputCode] = useState(getLocalStorage("userInputCode", ""));
-  const [isCodeValid, setIsCodeValid] = useState(getLocalStorage("isCodeValid", false));
-  const [username, setUsername] = useState(getLocalStorage("username", ""));
-  const [password, setPassword] = useState(getLocalStorage("password", ""));
-  const [confirmPassword, setConfirmPassword] = useState(getLocalStorage("confirmPassword", ""));
-  const [imageUrl, setImageUrl] = useState(getLocalStorage("imageUrl", ""));
+  const [email, setEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isCodeSent, setIsCodeSent] = useState(false);
+  const [userInputCode, setUserInputCode] = useState("");
+  const [isCodeValid, setIsCodeValid] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  useEffect(() => {
-    // ذخیره کردن داده‌ها در localStorage هر زمان که تغییر کنند
-    const dataToSave = {
-      email,
-      verificationCode,
-      isCodeSent,
-      userInputCode,
-      isCodeValid,
-      username,
-      password,
-      confirmPassword,
-      imageUrl,
-    };
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem("formData", JSON.stringify(dataToSave));
-    }
-  }, [email, verificationCode, isCodeSent, userInputCode, isCodeValid, username, password, confirmPassword, imageUrl]);
+  const router = useRouter(); // ایجاد رفرنس به useRouter برای هدایت
 
   // ارسال کد تایید
-  const sendVerificationEmail = () => {
+  const sendVerificationEmail = async () => {
+    // ابتدا چک کردن ایمیل تکراری
+    const isEmailUnique = await checkEmailUnique();
+    if (!isEmailUnique) return;
+
     setIsLoading(true);
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const templateParams = {
@@ -122,10 +101,31 @@ export default function Register() {
     setIsLoading(false);
   };
 
+  // بررسی ایمیل تکراری
+  const checkEmailUnique = async () => {
+    const { data, error } = await supabase
+      .from("register")
+      .select("email")
+      .eq("email", email);
+
+    if (error) {
+      console.error("خطا در بررسی ایمیل:", error);
+      return false;
+    }
+
+    if (data.length > 0) {
+      alert("این ایمیل قبلاً ثبت شده است!");
+      return false;
+    }
+
+    return true;
+  };
+
   // ارسال فرم
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // بررسی اینکه آیا کد تایید صحیح است یا نه
     if (password !== confirmPassword) {
       alert("رمز عبور و تأیید رمز عبور یکسان نیستند.");
       return;
@@ -153,21 +153,37 @@ export default function Register() {
       alert("خطا در ثبت‌نام!");
     } else {
       alert("ثبت‌نام با موفقیت انجام شد!");
+      // بعد از ثبت‌نام موفق، هدایت به صفحه لاگین
+      router.push('/login'); // مسیر صفحه لاگین شما
     }
 
     setIsLoading(false);
   };
 
   return (
-    <div className={`bg-custom-image-myUser bg-cover bg-center h-screen flex items-center justify-center ${isDarkMode ? "bg-gray-900" : "bg-white/60"}`}>
-      <div className={`backdrop-blur-lg rounded-lg p-5 shadow-lg w-96 ${isDarkMode ? "bg-gray-800/50" : "bg-white/50"}`}>
-        <h2 className={`text-2xl font-semibold text-center mb-6 ${isDarkMode ? "text-white" : "text-black"}`}>
+    <div
+      className={`bg-custom-image-myUser bg-cover bg-center h-screen flex items-center justify-center ${
+        isDarkMode ? "bg-gray-900" : "bg-white/60"
+      }`}
+    >
+      <div
+        className={`backdrop-blur-lg rounded-lg p-5 shadow-lg w-96 ${
+          isDarkMode ? "bg-gray-800/50" : "bg-white/50"
+        }`}
+      >
+        <h2
+          className={`text-2xl font-semibold text-center mb-6 ${
+            isDarkMode ? "text-white" : "text-black"
+          }`}
+        >
           ثبت‌نام در سایت قهوه من ❤️
         </h2>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
+            <label
+              className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}
+            >
               نام کاربری
             </label>
             <input
@@ -179,7 +195,9 @@ export default function Register() {
           </div>
 
           <div className="mb-4">
-            <label className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
+            <label
+              className={`block font-semibold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}
+            >
               ایمیل
             </label>
             <input
@@ -189,7 +207,11 @@ export default function Register() {
               onChange={(e) => setEmail(e.target.value)}
             />
             {!isCodeSent && (
-              <button type="button" onClick={sendVerificationEmail} className="mt-2 w-full bg-green-500 text-white py-2 rounded-lg">
+              <button
+                type="button"
+                onClick={sendVerificationEmail}
+                className="mt-2 w-full bg-green-500 text-white py-2 rounded-lg"
+              >
                 {isLoading ? <Spinner /> : "ارسال کد تایید"}
               </button>
             )}
@@ -203,7 +225,11 @@ export default function Register() {
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => setUserInputCode(e.target.value)}
               />
-              <button type="button" onClick={validateCode} className="mt-2 w-full bg-green-500 text-white py-2 rounded-lg">
+              <button
+                type="button"
+                onClick={validateCode}
+                className="mt-2 w-full bg-green-500 text-white py-2 rounded-lg"
+              >
                 تایید کد
               </button>
             </div>
@@ -228,26 +254,53 @@ export default function Register() {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
-          <div className="mb-4">
-  <label className="block font-semibold mb-2">انتخاب تصویر پروفایل</label>
-  <input
-    type="file"
-    accept="image/*"
-    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-    onChange={(e) => setSelectedFile(e.target.files[0])}
-  />
-  <button
-    type="button"
-    onClick={handleFileUpload}
-    className="mt-2 w-full bg-blue-500 text-white py-2 rounded-lg"
-  >
-    {isLoading ? <Spinner /> : "آپلود تصویر"}
-  </button>
-</div>
 
-          <button type="submit" className={`w-full py-2 ${isCodeValid ? "bg-green-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"} rounded-lg`}>
+          <div className="mb-4">
+            <label className="block font-semibold mb-2">انتخاب تصویر پروفایل</label>
+            <input
+              type="file"
+              accept="image/*"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setSelectedFile(e.target.files[0])}
+            />
+            <button
+              type="button"
+              onClick={handleFileUpload}
+              className="mt-2 w-full bg-blue-500 text-white py-2 rounded-lg"
+            >
+              {isLoading ? <Spinner /> : "آپلود تصویر"}
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            className={`w-full py-2 ${isCodeValid ? "bg-green-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"} rounded-lg`}
+          >
             {isLoading ? <Spinner /> : "ثبت‌نام"}
           </button>
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <input
+                type="checkbox"
+                id="remember"
+                name="remember"
+                className="text-blue-500"
+              />
+              <label
+                htmlFor="remember"
+                className={`${isDarkMode ? "text-gray-300" : "text-gray-600"}`}
+              >
+                مرا به خاطر بسپار
+              </label>
+            </div>
+            <a href="/forget" className="text-yellow-700 text-md">
+              فراموشی رمز عبور
+            </a>
+            <a href="/login" className="text-green-700 text-md">
+               ورود
+            </a>
+          </div>
+
         </form>
       </div>
     </div>

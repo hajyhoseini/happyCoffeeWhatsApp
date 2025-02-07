@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "@/context/ThemeContext";
-import { FaCoffee, FaClipboardList, FaSignInAlt, FaUserPlus, FaEnvelopeOpenText } from "react-icons/fa";
+import { FaSignOutAlt } from "react-icons/fa";
 import { Nav } from "react-bootstrap";
 import { createClient } from "@supabase/supabase-js";
+import { FaCoffee, FaClipboardList, FaSignInAlt, FaUserPlus, FaEnvelopeOpenText } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 // ایجاد ارتباط با سوپابیس
 const supabase = createClient(
@@ -14,6 +16,7 @@ const SidebarText = ({ isOpen }) => {
   const { isDarkMode } = useTheme();
   const [user, setUser] = useState(null);
   const [profileImage, setProfileImage] = useState("/image/defaultProfile.webp"); // تصویر پیش‌فرض
+  const router = useRouter(); // استفاده از router برای هدایت به صفحه لاگین
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,6 +52,25 @@ const SidebarText = ({ isOpen }) => {
     }
   };
 
+  // تابع خروج از حساب
+  const handleLogout = () => {
+    // پاک کردن اطلاعات از localStorage
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+  
+    // پاکسازی تصویر پروفایل
+    setProfileImage("/image/defaultProfile.webp");
+  
+    // تنظیم حالت کاربر به null
+    setUser(null);
+  };
+
+  // تابع هدایت به صفحه ورود
+  const handleLoginRedirect = () => {
+    router.push("/login");
+  };
+
   return (
     <div
       className={`h-full transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"} ${
@@ -64,48 +86,72 @@ const SidebarText = ({ isOpen }) => {
     >
       <div className="relative py-10 h-full overflow-y-auto">
         {/* اطلاعات پروفایل */}
-        <div className="flex items-center justify-center space-x-6 sm:flex-col sm:space-x-0 sm:space-y-4">
+        <div className="flex items-center justify-center space-x-6 sm:flex-col sm:space-x-0 sm:space-y-4 mb-2">
           <img
-            src={profileImage}
+            src={user ? profileImage : "/image/userMy.webp"} // تصویر پروفایل
             alt="Profile"
-            className="w-24 h-24 rounded-full border-4 border-white shadow-lg transform hover:scale-105 transition-transform"
+            className="w-32 h-32 rounded-full border-4 border-white shadow-lg transform hover:scale-105 transition-transform"
+            style={{
+              backgroundImage: user ? "none" : "url('/image/defaultProfileBackground.webp')", // پس‌زمینه زمانی که کاربر وارد نشده باشد
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
           />
-          <div className="space-y-3 text-center">
-            {user ? (
-              <>
-                <h1
-                  className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
-                    isDarkMode
-                      ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
-                      : "text-black bg-yellow-700/95 hover:bg-yellow-600"
-                  }`}
-                >
-                  نام کاربری : {user.username}
-                </h1>
-                <h1
-                  className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
-                    isDarkMode
-                      ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
-                      : "text-black bg-yellow-700/95 hover:bg-yellow-600"
-                  }`}
-                >
-                  ایمیل : {user.email}
-                </h1>
-              </>
-            ) : (
+        </div>
+        <div className="space-y-1 flex flex-col justify-center items-center">
+          {user ? (
+            <>
               <h1
-                className={`text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                className={`w-max text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
                   isDarkMode
                     ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
                     : "text-black bg-yellow-700/95 hover:bg-yellow-600"
                 }`}
               >
-                کاربر موجود نیست. لطفا وارد حساب خود شوید.
+                نام کاربری : {user.username}
               </h1>
-            )}
-          </div>
+              <h1
+                className={`w-max text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                  isDarkMode
+                    ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
+                    : "text-black bg-yellow-700/95 hover:bg-yellow-600"
+                }`}
+              >
+                ایمیل : {user.email}
+              </h1>
+  
+              {/* دکمه خروج */}
+              <button
+                onClick={handleLogout}
+                className={`w-max text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                  isDarkMode
+                    ? "text-white bg-red-600 hover:bg-red-500"
+                    : "text-black bg-red-500 hover:bg-red-400"
+                }`}
+              >
+                خروج از حساب
+              </button>
+            </>
+          ) : (
+            <div className="text-center">
+              <h1
+                className={`w-max text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                  isDarkMode
+                    ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
+                    : "text-black bg-yellow-700/95 hover:bg-yellow-600"
+                }`}
+              >
+                <span
+                  onClick={handleLoginRedirect}
+                  className={`cursor-pointer ${isDarkMode? " text-white border-b-2 border-white":" text-black border-b-2 border-black"}`}
+                >
+                  کاربر موجود نیست. لطفا وارد حساب خود شوید.
+                </span>
+              </h1>
+            </div>
+          )}
         </div>
-
+  
         {/* بخش ناوبری */}
         <Nav className="d-flex flex-wrap sm:flex-row md:flex-col justify-between py-6">
           <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center my-3">
@@ -119,7 +165,7 @@ const SidebarText = ({ isOpen }) => {
               <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">طعم‌ها</span>
             </Nav.Link>
           </Nav.Item>
-
+  
           <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center my-3">
             <Nav.Link
               href="/buyBasket"
@@ -131,6 +177,7 @@ const SidebarText = ({ isOpen }) => {
               <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">سفارشات</span>
             </Nav.Link>
           </Nav.Item>
+  
           <Nav.Item className="w-full sm:w-full md:w-full text-center my-3">
             <Nav.Link
               href="/behappy"
@@ -142,6 +189,7 @@ const SidebarText = ({ isOpen }) => {
               <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">به ما بپیوند</span>
             </Nav.Link>
           </Nav.Item>
+  
           {!user ? (
             <>
               <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center my-3">
@@ -155,7 +203,7 @@ const SidebarText = ({ isOpen }) => {
                   <span className="ps-3 bg-yellow-700 rounded-lg px-6 py-3 font-medium ms-2">ورود</span>
                 </Nav.Link>
               </Nav.Item>
-
+  
               <Nav.Item className="flex-1 sm:w-1/2 md:w-full text-center my-3">
                 <Nav.Link
                   href="/register"

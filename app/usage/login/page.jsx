@@ -131,10 +131,10 @@ export default function Login() {
                 مرا به خاطر بسپار
               </label>
             </div>
-            <a href="/forget" className="text-blue-500 text-md">
+            <a href="/forget" className="text-yellow-600 text-md">
               فراموشی رمز عبور
             </a>
-            <a href="/register" className="text-blue-500 text-md">
+            <a href="/register" className="text-blue-400 text-md">
               ثبت نام
             </a>
           </div>
