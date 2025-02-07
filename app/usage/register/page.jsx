@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import emailjs from "emailjs-com";
@@ -12,34 +12,48 @@ const supabase = createClient(
 
 export default function Register() {
   const { isDarkMode } = useTheme();
-  const [email, setEmail] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [isCodeSent, setIsCodeSent] = useState(false);
-  const [userInputCode, setUserInputCode] = useState("");
-  const [isCodeValid, setIsCodeValid] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+
+  // بازیابی مقادیر از localStorage
+  const getLocalStorage = (key, defaultValue) => {
+    if (typeof window !== "undefined") {
+      const storedValue = localStorage.getItem(key);
+      return storedValue ? JSON.parse(storedValue) : defaultValue;
+    }
+    return defaultValue;
+  };
+
+  const [email, setEmail] = useState(getLocalStorage("email", ""));
+  const [verificationCode, setVerificationCode] = useState(getLocalStorage("verificationCode", ""));
+  const [isCodeSent, setIsCodeSent] = useState(getLocalStorage("isCodeSent", false));
+  const [userInputCode, setUserInputCode] = useState(getLocalStorage("userInputCode", ""));
+  const [isCodeValid, setIsCodeValid] = useState(getLocalStorage("isCodeValid", false));
+  const [username, setUsername] = useState(getLocalStorage("username", ""));
+  const [password, setPassword] = useState(getLocalStorage("password", ""));
+  const [confirmPassword, setConfirmPassword] = useState(getLocalStorage("confirmPassword", ""));
+  const [imageUrl, setImageUrl] = useState(getLocalStorage("imageUrl", ""));
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
+  useEffect(() => {
+    // ذخیره کردن داده‌ها در localStorage هر زمان که تغییر کنند
+    const dataToSave = {
+      email,
+      verificationCode,
+      isCodeSent,
+      userInputCode,
+      isCodeValid,
+      username,
+      password,
+      confirmPassword,
+      imageUrl,
+    };
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem("formData", JSON.stringify(dataToSave));
+    }
+  }, [email, verificationCode, isCodeSent, userInputCode, isCodeValid, username, password, confirmPassword, imageUrl]);
+
   // ارسال کد تایید
-
-
-useEffect(() => {
-  const handleBeforeUnload = (event) => {
-    event.preventDefault();
-    event.returnValue = ""; // این خط باعث نمایش پیام هشدار در برخی مرورگرها می‌شود
-  };
-
-  window.addEventListener("beforeunload", handleBeforeUnload);
-
-  return () => {
-    window.removeEventListener("beforeunload", handleBeforeUnload);
-  };
-}, []);
-
   const sendVerificationEmail = () => {
     setIsLoading(true);
     const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -88,23 +102,20 @@ useEffect(() => {
     setIsLoading(true);
     const fileName = `${Date.now()}_${selectedFile.name}`;
 
-   const { data, error } = await supabase.storage
-  .from("avatars") // نام صحیح باکت
-  .upload(fileName, selectedFile);
+    const { data, error } = await supabase.storage
+      .from("avatars") // نام صحیح باکت
+      .upload(fileName, selectedFile);
 
+    if (error) {
+      console.error("خطای آپلود:", error);
+      alert(`خطا در آپلود تصویر! ${error.message}`);
+      setIsLoading(false);
+      return;
+    }
 
-      if (error) {
-        console.error("خطای آپلود:", error);
-        alert(`خطا در آپلود تصویر! ${error.message}`);
-        setIsLoading(false);
-        return;
-      }
-      
-
-      const { data: publicUrlData } = supabase.storage
+    const { data: publicUrlData } = supabase.storage
       .from("avatars") // تغییر نام باکت
       .getPublicUrl(fileName);
-    
 
     setImageUrl(publicUrlData.publicUrl);
     alert("تصویر آپلود شد!");
