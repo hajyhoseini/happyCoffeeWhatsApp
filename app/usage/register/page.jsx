@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import emailjs from "emailjs-com";
 import { createClient } from "@supabase/supabase-js";
@@ -25,12 +25,13 @@ export default function Register() {
   const [imageUrl, setImageUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [adminCode, setAdminCode] = useState(""); // فیلد کد ادمین
+  const [isAdmin, setIsAdmin] = useState(false); // شناسایی کاربر ادمین
 
-  const router = useRouter(); // ایجاد رفرنس به useRouter برای هدایت
+  const router = useRouter();
 
   // ارسال کد تایید
   const sendVerificationEmail = async () => {
-    // ابتدا چک کردن ایمیل تکراری
     const isEmailUnique = await checkEmailUnique();
     if (!isEmailUnique) return;
 
@@ -71,7 +72,7 @@ export default function Register() {
     }
   };
 
-  // آپلود عکس
+  // آپلود تصویر
   const handleFileUpload = async () => {
     if (!selectedFile) {
       alert("لطفا یک تصویر انتخاب کنید.");
@@ -82,7 +83,7 @@ export default function Register() {
     const fileName = `${Date.now()}_${selectedFile.name}`;
 
     const { data, error } = await supabase.storage
-      .from("avatars") // نام صحیح باکت
+      .from("avatars")
       .upload(fileName, selectedFile);
 
     if (error) {
@@ -93,7 +94,7 @@ export default function Register() {
     }
 
     const { data: publicUrlData } = supabase.storage
-      .from("avatars") // تغییر نام باکت
+      .from("avatars")
       .getPublicUrl(fileName);
 
     setImageUrl(publicUrlData.publicUrl);
@@ -121,11 +122,20 @@ export default function Register() {
     return true;
   };
 
+  // بررسی کد ادمین
+  const validateAdminCode = () => {
+    if (adminCode === "A6387640h") {
+      setIsAdmin(true);
+      alert("شما به عنوان ادمین شناخته شدید!");
+    } else {
+      alert("کد ادمین وارد شده صحیح نیست.");
+    }
+  };
+
   // ارسال فرم
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // بررسی اینکه آیا کد تایید صحیح است یا نه
     if (password !== confirmPassword) {
       alert("رمز عبور و تأیید رمز عبور یکسان نیستند.");
       return;
@@ -136,6 +146,12 @@ export default function Register() {
       return;
     }
 
+    // چک کردن کد ادمین
+    if (adminCode && !isAdmin) {
+      validateAdminCode();
+      if (!isAdmin) return; // اگر کد ادمین صحیح نبود، ارسال را متوقف می‌کنیم
+    }
+
     setIsLoading(true);
 
     const { error } = await supabase.from("register").insert([
@@ -144,8 +160,9 @@ export default function Register() {
         email,
         password,
         confirm_password: confirmPassword,
-        verification_code: verificationCode,
+        verification_code: parseInt(verificationCode), // تبدیل به عدد
         profile_image: imageUrl,
+        role: isAdmin ? "admin" : "user", // استفاده از role به جای is_admin
       },
     ]);
 
@@ -153,8 +170,7 @@ export default function Register() {
       alert("خطا در ثبت‌نام!");
     } else {
       alert("ثبت‌نام با موفقیت انجام شد!");
-      // بعد از ثبت‌نام موفق، هدایت به صفحه لاگین
-      router.push('/login'); // مسیر صفحه لاگین شما
+      router.push("/login");
     }
 
     setIsLoading(false);
@@ -272,35 +288,23 @@ export default function Register() {
             </button>
           </div>
 
+          {/* بخش کد ادمین */}
+          <div className="mb-4">
+            <label className="block font-semibold mb-2">در صورت ادمین بودن کد را وارد کنید</label>
+            <input
+              type="text"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={adminCode}
+              onChange={(e) => setAdminCode(e.target.value)}
+            />
+          </div>
+
           <button
             type="submit"
             className={`w-full py-2 ${isCodeValid ? "bg-green-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"} rounded-lg`}
           >
             {isLoading ? <Spinner /> : "ثبت‌نام"}
           </button>
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <input
-                type="checkbox"
-                id="remember"
-                name="remember"
-                className="text-blue-500"
-              />
-              <label
-                htmlFor="remember"
-                className={`${isDarkMode ? "text-gray-300" : "text-gray-600"}`}
-              >
-                مرا به خاطر بسپار
-              </label>
-            </div>
-            <a href="/forget" className="text-yellow-700 text-md">
-              فراموشی رمز عبور
-            </a>
-            <a href="/login" className="text-green-700 text-md">
-               ورود
-            </a>
-          </div>
-
         </form>
       </div>
     </div>
