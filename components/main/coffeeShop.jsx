@@ -126,25 +126,25 @@ const CoffeeShop = () => {
                   style={{ minHeight: "200px" }}
                 >
                   <div
-                    className={`text-3xl sm:text-4xl mb-3 transition-transform transform hover:scale-125 hover:rotate-3d ${
+                    className={`text-5xl w- sm:text-4xl mb-3 transition-transform transform hover:scale-125 hover:rotate-3d ${
                       isDarkMode ? "text-yellow-500" : flavor.icon.props.className
                     } shadow-xl`}
                   >
                     {flavor.icon}
                   </div>
                   <p
-                    className={`font-semibold text-md sm:text-lg mb-3 ${isDarkMode ? "text-white" : "text-black"} shadow-md`}
+                    className={`font-semibold text-4xl sm:text-lg mb-3 ${isDarkMode ? "text-white" : "text-black"} shadow-md`}
                   >
                     {flavor.name}
                   </p>
 
                   <p
-                    className={`text-sm font-bold sm:text-lg mb-3 ${isDarkMode ? "text-white" : "text-gray-700"} shadow-sm`}
+                    className={`text-lg font-bold sm:text-lg mb-3 ${isDarkMode ? "text-white" : "text-gray-700"} shadow-sm`}
                   >
                   پک 20 عددی
                   </p>
                   <p
-                    className={`text-sm sm:text-lg mb-3 ${isDarkMode ? "text-white" : "text-gray-700"} shadow-sm`}
+                    className={`text-lg sm:text-lg mb-3 ${isDarkMode ? "text-white" : "text-gray-700"} shadow-sm`}
                   >
                     350,000 تومان
                   </p>
