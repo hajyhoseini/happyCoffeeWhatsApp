@@ -71,7 +71,7 @@ const Header = () => {
           <div className="mt-2 sm:mt-0 sm:ml-3 flex justify-center w-full">
             <div className={`bg-yellow-100 p-1 sm:p-0.5 rounded-2xl max-w-xs sm:max-w-sm mx-auto relative overflow-hidden transition-all duration-300 ease-in-out w-full ${isDarkMode ? "bg-yellow-800/80" : "bg-yellow-100/80"}`}>
               <div className="relative z-10 text-center sm:text-left">
-                <h1 className={`text-2xl sm:text-base lg:text-lg font-extrabold ${isDarkMode ? "text-white " : "text-gray-800"}`}>
+                <h1 className={` font-bold text-lg  lg:text-lg xl:text-2xl  ${isDarkMode ? "text-white " : "text-gray-800"}`}>
                   سلام، به دنیای خوشمزه "هپی کافی" خوش آمدید!
                 </h1>
 
