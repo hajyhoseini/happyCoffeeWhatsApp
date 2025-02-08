@@ -102,7 +102,7 @@ const SidebarText = ({ isOpen }) => {
           {user ? (
             <>
               <h1
-                className={`w-max text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                className={`w-max  text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
                   isDarkMode
                     ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
                     : "text-black bg-yellow-700/95 hover:bg-yellow-600"
@@ -111,7 +111,7 @@ const SidebarText = ({ isOpen }) => {
                 نام کاربری : {user.username}
               </h1>
               <h1
-                className={`w-max text-lg rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
+                className={`w-max text-xl  lg:text-xs rounded-lg px-8 py-4 font-semibold shadow-md transition-transform transform hover:scale-105 ${
                   isDarkMode
                     ? "text-white hover:bg-brown-700 bg-brown-800 backdrop-blur-sm"
                     : "text-black bg-yellow-700/95 hover:bg-yellow-600"
