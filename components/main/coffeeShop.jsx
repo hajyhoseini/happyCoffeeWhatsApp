@@ -118,11 +118,11 @@ const CoffeeShop = () => {
           } justify-content-center w-100 rounded-lg shadow-md p-6 transition-all duration-700 ease-in-out hover:scale-105`}
         >
           <Col>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6">
               {flavors.map((flavor) => (
                 <div
                   key={flavor.name}
-                  className={`flex flex-col items-center justify-center text-center p-4 ${flavor.bgColor} rounded-lg transform transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-yellow-500`}
+                  className={`flex flex-col items-center justify-center text-center  p-4 ${flavor.bgColor} rounded-lg transform transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-yellow-500`}
                   style={{ minHeight: "200px" }}
                 >
                   <div
@@ -138,6 +138,11 @@ const CoffeeShop = () => {
                     {flavor.name}
                   </p>
 
+                  <p
+                    className={`text-sm font-bold sm:text-lg mb-3 ${isDarkMode ? "text-white" : "text-gray-700"} shadow-sm`}
+                  >
+                  پک 20 عددی
+                  </p>
                   <p
                     className={`text-sm sm:text-lg mb-3 ${isDarkMode ? "text-white" : "text-gray-700"} shadow-sm`}
                   >
