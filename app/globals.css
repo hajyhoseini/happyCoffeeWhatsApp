@@ -83,7 +83,9 @@
   transform-origin: center; /* چرخش حول محور Z */
 }
 
-
+.text-man{
+  font-size: 16px;
+}
 h1 {
   font-size: 2.5rem;
 }
