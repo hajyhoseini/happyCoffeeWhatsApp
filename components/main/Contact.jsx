@@ -47,48 +47,7 @@ const Contact = () => {
         </h3>
 
         {/* کرول (Carousel) برای اطلاعات تماس */}
-        <div className="relative z-10 mb-12 flex justify-center items-center">
-          <Carousel className="w-full md:w-3/5 max-w-4xl">
-            {/* آدرس */}
-            <Carousel.Item>
-              <Card className={`${bgColorContact} text-center p-6 rounded-lg shadow-lg`}>
-                <Card.Body>
-                  <div className="flex justify-center items-center mb-3">
-                    <FaMapMarkerAlt className={`text-4xl ${isDarkMode ? "text-yellow-500" : "text-white"}`} />
-                  </div>
-                  <h4 className={`text-xl font-semibold ${isDarkMode ? "text-yellow-500" : "text-white"}`}>آدرس ما</h4>
-                  <p className={`text-lg ${isDarkMode ? "text-yellow-500" : "text-white"}`}>
-                    تهران، میدان ولیعصر، خیابان انقلاب، کافی‌شاپ هپی کافی
-                  </p>
-                </Card.Body>
-              </Card>
-            </Carousel.Item>
-            {/* تلفن */}
-            <Carousel.Item>
-              <Card className={`${bgColorContact} text-center p-6 rounded-lg shadow-lg`}>
-                <Card.Body>
-                  <div className="flex justify-center items-center mb-3">
-                    <FaPhoneAlt className={`text-4xl ${isDarkMode ? "text-yellow-500" : "text-white"}`} />
-                  </div>
-                  <h4 className={`text-xl font-semibold ${isDarkMode ? "text-yellow-500" : "text-white"}`}>تلفن</h4>
-                  <p className={`text-lg ${isDarkMode ? "text-yellow-500" : "text-white"}`}>09388780198</p>
-                </Card.Body>
-              </Card>
-            </Carousel.Item>
-            {/* ایمیل */}
-            <Carousel.Item>
-              <Card className={`${bgColorContact} text-center p-6 rounded-lg shadow-lg`}>
-                <Card.Body>
-                  <div className="flex justify-center items-center mb-3">
-                    <FaEnvelope className={`text-4xl ${isDarkMode ? "text-yellow-500" : "text-white"}`} />
-                  </div>
-                  <h4 className={`text-xl font-semibold ${isDarkMode ? "text-yellow-500" : "text-white"}`}>ایمیل</h4>
-                  <p className={`text-lg ${isDarkMode ? "text-yellow-500" : "text-white"}`}>hajy3843@gmail.com</p>
-                </Card.Body>
-              </Card>
-            </Carousel.Item>
-          </Carousel>
-        </div>
+  
 
         {/* اضافه کردن کامپوننت نظرات بین فرم و Carousel */}
         <CommentsSection isDarkMode={isDarkMode} /> {/* نمایش کامپوننت نظرات */}
