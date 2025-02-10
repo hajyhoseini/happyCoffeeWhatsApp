@@ -183,7 +183,7 @@ export default function Register() {
       }`}
     >
       <div
-        className={`backdrop-blur-lg rounded-lg p-5 shadow-lg w-96 ${
+        className={`backdrop-blur-lg mt-16 rounded-lg p-5 shadow-lg w-96 ${
           isDarkMode ? "bg-gray-800/50" : "bg-white/50"
         }`}
       >
