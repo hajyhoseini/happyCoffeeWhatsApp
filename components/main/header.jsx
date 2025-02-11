@@ -31,7 +31,7 @@ const Header = () => {
   return (
     <header className={`w-full shadow-lg ${isDarkMode ? " bg-custom-coffeeShop-img" : "bg-custom-header-img"} bg-cover bg-center fixed top-0 left-0 right-0 z-30`}>
       {/* بخش خوشامدگویی */}
-      <div className={`relative ${isDarkMode ? "bg-[#34495E]" : "bg-[#F4A261]"} text-white text-center py-3 px-4 font-semibold text-xs sm:text-sm shadow-lg z-10 max-w-screen-lg mx-auto rounded-xl overflow-hidden`}>
+      <div className={`relative ${isDarkMode ? "bg-[#34495E]" : "bg-[#F4A261]"} text-white text-center py-1 px-4 font-semibold text-xs sm:text-sm shadow-lg z-10 max-w-screen-lg mx-auto rounded-xl overflow-hidden`}>
         <div className="absolute top-0 left-0 w-full  animate-lightning z-20"></div>
         <svg 
           className="absolute top-0 left-0 w-full h-full transform rotate-180"
@@ -61,16 +61,7 @@ const Header = () => {
         isSidebarOpen={isSidebarOpen} 
       />
       {/* محتوای مرکزی */}
-      <div className="container mx-auto flex justify-center items-center px-3 sm:px-4">
-        <div className="flex items-end text-center lg:text-left">
-
-          <div className="mt-2 sm:mt-0 sm:ml-3 flex justify-center w-full">
-            <div className={`bg-yellow-100 p-1 sm:p-0.5 rounded-2xl max-w-xs sm:max-w-sm mx-auto relative overflow-hidden transition-all duration-300 ease-in-out w-full ${isDarkMode ? "bg-yellow-800/80" : "bg-yellow-100/80"}`}>
-          
-            </div>
-          </div>
-        </div>
-      </div>
+     
 
       {/* منوی ناوبری */}
       <NavMenu />

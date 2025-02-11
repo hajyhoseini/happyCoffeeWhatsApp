@@ -22,8 +22,8 @@ const Tastes = () => {
       id="skills"
       className={`relative max-w-3xl mx-auto rounded-lg p-5 w-full py-16 px-10 ${
         isDarkMode
-          ? "bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white"
-          : "bg-gradient-to-r from-teal-500 via-green-400 to-blue-500 text-black"
+          ? " text-white"
+          : " text-black"
       } shadow-lg transition-all duration-500`}
     >
       <h3  style={{ textShadow: "2px 2px 5px rgba(255, 223, 0, 0.7)" }}        className={`${

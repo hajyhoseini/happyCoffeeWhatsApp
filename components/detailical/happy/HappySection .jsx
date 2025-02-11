@@ -38,9 +38,8 @@ const HappySection = () => {
             : "bg-[#F4E1C1] text-gray-800"
         } text-lg md:text-xl leading-relaxed p-4 rounded-lg md:w-2/4 shadow-md transition-all duration-500`}
       >
-NEXT_PUBLIC_SUPABASE_URL=https://ymtlhrkazymcesiehmmf.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InltdGxocmthenltY2VzaWVobW1mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg0NDMyMzMsImV4cCI6MjA1NDAxOTIzM30.F8rjfxNatt7ax0jheUREH5ccknSPJ41z7L4KjluDqvE
-
+        قهوه ما فقط طعمی خوشمزه نیست، بلکه یک تجربه است. اگر از طعم عالی
+        قهوه‌های ما لذت می‌برید، پس چرا در شبکه‌های اجتماعی با ما همراه نشوید؟
       </p>
     </div>
   );
