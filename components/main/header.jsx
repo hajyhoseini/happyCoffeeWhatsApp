@@ -33,7 +33,7 @@ const Header = () => {
     >
       {/* خوشامدگویی با افکت روشنایی */}
       <div className={`relative ${isDarkMode ? "bg-[#34495E]" : "bg-[#F4A261]"} text-white text-center py-3 px-4 font-semibold text-xs sm:text-sm shadow-lg z-10 max-w-screen-lg mx-auto rounded-xl overflow-hidden`}>
-        <div className="absolute top-0 left-0 w-full h-full animate-lightning z-20"></div>
+        <div className="absolute top-0 left-0 w-full  animate-lightning z-20"></div>
         <svg 
           className="absolute top-0 left-0 w-full h-full transform rotate-180"
           xmlns="http://www.w3.org/2000/svg"
@@ -42,12 +42,12 @@ const Header = () => {
         >
           <path fill="#F39C12" d="M0,128L1440,32L1440,320L0,320Z" />
         </svg>
-        <p className={`${isDarkMode ? "text-gray-100" : "text-white"} relative text-lg lg:text-xl font-bold text-gray-100 z-30`}>
+        <p className={`${isDarkMode ? "text-gray-100" : "text-white"} relative text-xl lg:text-xl font-bold text-gray-100 z-30`}>
           <span role="img" aria-label="coffee" className="inline mr-2 text-4xl animate-pulse">☕</span>
-          <span style={{ fontFamily: 'Pacifico', fontSize: '2.5rem' }}>Happy Coffee</span>
+          <span style={{ fontFamily: 'Pacifico', fontSize: '2rem' }}>Happy Coffee</span>
           <br />
           یک فنجان قهوه‌ی خوشمزه منتظر شماست! 
-          <span role="img" aria-label="smile" className="inline ml-2 text-4xl animate-bounce">😊</span>
+          <span role="img" aria-label="smile" className="inline ml-2 text-4xl animate-bounce"></span>
         </p>
       </div>
 
