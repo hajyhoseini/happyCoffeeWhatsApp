@@ -7,7 +7,11 @@ module.exports = {
   ],
   theme: {
     extend: {
-      
+      backgroundImage: {
+        'gradient-to-r': 'linear-gradient(to right, var(--tw-gradient-stops))',
+        // سایر گرادیانت‌ها
+      },
+
       colors: {
         'brown-700': '#6B4F4F',
         'brown-800': '#4A3B3B',

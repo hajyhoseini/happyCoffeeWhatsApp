@@ -5,6 +5,7 @@ import DescForSkill from "@/components/main/descForSkill";
 import Description from "@/components/main/description";
 import Projects from "@/components/main/Projects";
 import SidebarMain from "@/components/main/sidebarMain";
+import 'typeface-pacifico';
 import Tastes from "@/components/main/tastes";
 import 'typeface-pacifico';
 import CallToHelper from "@/components/detailical/callToHelper";
