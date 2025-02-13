@@ -43,7 +43,7 @@ const Header = () => {
         </svg>
         <p className={`${isDarkMode ? "text-gray-100" : "text-white"} relative text-xl lg:text-xl font-bold text-gray-100 z-30`}>
           <span role="img" aria-label="coffee" className="inline mr-2 text-4xl animate-pulse">☕</span>
-          <span style={{ fontFamily: 'Pacifico', fontSize: '1.5rem' }}>Happy Coffee</span>
+          <span className=' text-xl md:text-3xl lg:text-5xl' style={{ fontFamily: 'Pacifico' }}>Happy Coffee</span>
           <br />
           یک فنجان قهوه‌ی خوشمزه منتظر شماست! 
           <span role="img" aria-label="smile" className="inline ml-2 text-4xl animate-bounce"></span>
